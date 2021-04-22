@@ -581,6 +581,7 @@ class MeshContainer extends React.Component {
                                                                   onChange={this.handleOptionChange}/>
                                             </InputGroup.Prepend>
                                             <InputGroup.Text>Little endian aflr3</InputGroup.Text>
+                                            <p className="text-danger">For lb8.ugrid</p>
                                         </InputGroup>
 
                                         <InputGroup>
@@ -590,6 +591,7 @@ class MeshContainer extends React.Component {
                                                                   onChange={this.handleOptionChange}/>
                                             </InputGroup.Prepend>
                                             <InputGroup.Text>Big endian aflr3</InputGroup.Text>
+                                            <p className="text-danger">For b8.ugrid</p>
                                         </InputGroup>
 
                                     </Col>
@@ -737,7 +739,7 @@ class MeshContainer extends React.Component {
         }
         else {
           this.setState({
-            newMeshEndianType: 'little',
+            newMeshEndianType: '',
             newMeshFormat: "aflr3"
           });
         }
