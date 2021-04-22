@@ -316,9 +316,11 @@ class CaseContainer extends React.Component {
 
                                                     <Dropdown.Menu>
                                                       {
-                                                       downloadFiles.map((item, index) => {
-                                                        return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value)}>{item.name}</DropdownItem>
-                                                      })}
+                                                        downloadFiles.map((item, index) => {
+                                                          return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value)}>{item.name}</DropdownItem>
+                                                        })
+                                                      }
+                                                        <DropdownItem onClick={(e) => this.downloadFlow360Json(e, caseItem.caseName)}>Parameters</DropdownItem>
                                                     </Dropdown.Menu>
                                                   </Dropdown>
                                                 </OverlayTrigger>
@@ -464,6 +466,20 @@ class CaseContainer extends React.Component {
           alert(`${filename} not found.`);
         }
       });
+    }
+
+    downloadFlow360Json(e, case_name) {
+      e.stopPropagation();
+      console.log(case_name);
+      const element = document.createElement("a");
+      const output = {
+
+      }
+      const file = new Blob([JSON.stringify(output, null, "\t")], {type: 'text/plain'});
+      element.href = URL.createObjectURL(file);
+      element.download = case_name + ".txt";
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
     }
 
     refreshCaseList() {
