@@ -483,19 +483,21 @@ class CaseContainer extends React.Component {
       // document.body.appendChild(element); // Required for this to work in FireFox
       // element.click();
       awsBuildSignedUrl(case_id, "flow360.json", (signedUrl) => {
-        // axios.get(signedUrl, (err, response) => {
-        //   console.log(err)
-        //   console.log(response)
-        // })
-        if (signedUrl) {
-          let a = document.createElement('a');
-          a.href = signedUrl;
-          a.target = "_blank"
-          a.download = case_name + ".json";
-          a.click();
-        } else {
-          alert(`flow360.json not found.`);
-        }
+        axios.get(signedUrl).then((response) => {
+          if(response.data) {
+            const element = document.createElement("a");
+            const output = JSON.stringify(response.data, null, "   ");
+            const file = new Blob([output], {type: 'text/plain'});
+            element.href = URL.createObjectURL(file);
+            element.download = case_name + ".txt";
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+            document.body.removeChild(element);
+          }
+          else {
+            alert("flow360.json not found.");
+          }
+        })
       });
 
     }
