@@ -260,8 +260,8 @@ class MeshContainer extends React.Component {
       const { selectedSolverVer, isNewCase}  = this.state;
       //console.log(this.state);
       const s3User = getS3User();
-      // const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
-      const hasOwnership = true;
+      const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
+      // const hasOwnership = true;
 
       const drop_down_refresh = { 10: '10 seconds', 30: '30 seconds',
           60: '1 minute', 0: 'Disabled'};
