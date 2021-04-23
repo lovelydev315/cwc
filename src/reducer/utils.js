@@ -23,7 +23,7 @@ axios.interceptors.response.use(function (response) {
       //console.log(0);
         //do nothing.
     }
-    else if(401 === error.response.status && authRetry < 10) {
+    else if(error && error.response && 401 === error.response.status && authRetry < 10) {
         //refresh to get token again.
       //console.log(authRetry);
         authRetry ++;
@@ -51,7 +51,7 @@ axios.interceptors.response.use(function (response) {
                 }
             });
     }
-    else if(401 === error.response.status && authRetry >= 10) {
+    else if(error && error.response && 401 === error.response.status && authRetry >= 10) {
         clearS3User();
         //console.log("go to login");
         history.push("/app/login");
