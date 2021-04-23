@@ -315,12 +315,12 @@ class CaseContainer extends React.Component {
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu>
+                                                        <DropdownItem onClick={(e) => this.downloadFlow360Json(e, caseItem.caseName, caseItem.caseId)}>Flow360 Json</DropdownItem>
                                                       {
                                                         downloadFiles.map((item, index) => {
                                                           return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value)}>{item.name}</DropdownItem>
                                                         })
                                                       }
-                                                        <DropdownItem onClick={(e) => this.downloadFlow360Json(e, caseItem.caseName)}>Parameters</DropdownItem>
                                                     </Dropdown.Menu>
                                                   </Dropdown>
                                                 </OverlayTrigger>
@@ -468,21 +468,31 @@ class CaseContainer extends React.Component {
       });
     }
 
-    downloadFlow360Json(e, case_name) {
+    downloadFlow360Json(e, case_name, case_id) {
       e.stopPropagation();
-      console.log(case_name);
-      const element = document.createElement("a");
-      const output = {
-        "boundaries" :
-        {
-          "noSlipWalls" : ["blk-1/Wall"]
+      // const element = document.createElement("a");
+      // const output = {
+      //   "boundaries" :
+      //   {
+      //     "noSlipWalls" : ["blk-1/Wall"]
+      //   }
+      // }
+      // const file = new Blob([JSON.stringify(output, null, "   ")], {type: 'text/plain'});
+      // element.href = URL.createObjectURL(file);
+      // element.download = case_name + ".txt";
+      // document.body.appendChild(element); // Required for this to work in FireFox
+      // element.click();
+      awsBuildSignedUrl(case_id, "Flow360.json", (signedUrl) => {
+        if (signedUrl) {
+          let a = document.createElement('a');
+          a.href = signedUrl;
+          a.download = case_name + ".json";
+          a.click();
+        } else {
+          alert(`Flow360.json not found.`);
         }
-      }
-      const file = new Blob([JSON.stringify(output, null, "   ")], {type: 'text/plain'});
-      element.href = URL.createObjectURL(file);
-      element.download = case_name + ".txt";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
+      });
+
     }
 
     refreshCaseList() {
