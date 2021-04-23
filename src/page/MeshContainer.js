@@ -238,7 +238,8 @@ class MeshContainer extends React.Component {
         const { selectedSolverVer, isNewCase}  = this.state;
         //console.log(this.state);
       const s3User = getS3User();
-      const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
+      // const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
+      const hasOwnership = true;
 
       const drop_down_refresh = { 10: '10 seconds', 30: '30 seconds',
           60: '1 minute', 0: 'Disabled'};
@@ -487,7 +488,7 @@ class MeshContainer extends React.Component {
                     </FormGroup>
                     <Modal show={isNewCase} onHide={this.handleNewCaseClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Upload A Case</Modal.Title>
+                            <Modal.Title>Read A Case</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form horizontal>
