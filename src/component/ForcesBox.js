@@ -40,7 +40,7 @@ export default class ForcesBox extends React.Component {
     }
 
     drawChart() {
-
+        console.log("props",this.props.data)
         let forces = [];
         const get_total_forces_body = this.props.data;
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
