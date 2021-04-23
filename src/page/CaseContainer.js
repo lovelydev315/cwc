@@ -473,9 +473,12 @@ class CaseContainer extends React.Component {
       console.log(case_name);
       const element = document.createElement("a");
       const output = {
-
+        "boundaries" :
+        {
+          "noSlipWalls" : ["blk-1/Wall"]
+        }
       }
-      const file = new Blob([JSON.stringify(output, null, "\t")], {type: 'text/plain'});
+      const file = new Blob([JSON.stringify(output, null, "   ")], {type: 'text/plain'});
       element.href = URL.createObjectURL(file);
       element.download = case_name + ".txt";
       document.body.appendChild(element); // Required for this to work in FireFox

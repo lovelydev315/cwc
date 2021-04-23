@@ -19,6 +19,7 @@ axios.interceptors.response.use(function (response) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     const originalRequest = error.config;
+    console.log(error)
     if (history.location.pathname === "/app/login") {
       //console.log(0);
         //do nothing.
