@@ -668,7 +668,8 @@ class MeshContainer extends React.Component {
     handleOptionChange(changeEvent) {
         this.setState({
             newMeshEndianType: changeEvent.target.value,
-            newMeshFormat: "aflr3"
+            newMeshFormat: "aflr3",
+            endiannessSelected: true
         });
     };
 
