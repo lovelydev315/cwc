@@ -147,6 +147,47 @@ export const visualizeFlow360Case = function(){
             ctx.drawImage(img, -100, 50, 300, 300);
         }
     }
+
+    vis.redrawWithClick = function() {
+        let iTheta = vis.thetaSlider.value;
+        let phi = vis.phiSlider.value * 15;
+        let iField = (Number(vis.fieldSlider.value) + 1) % vis.fields.length;
+        vis.fieldSlider.value = iField;
+        let thetaStr = ["180", "120", "060", "000"][iTheta];
+        let phiStr = (phi % 360).toString();
+        if (iTheta == 0 || iTheta == 3) {
+            phiStr = "000";
+        }
+        phiStr = "0".repeat(3 - phiStr.length) + phiStr;
+
+        vis.fieldButton.innerHTML = vis.fields[iField];
+
+        let ctx = vis.canvas.getContext("2d");
+        let grd = ctx.createLinearGradient(0, 0, 0, 1024);
+        grd.addColorStop(0, ["#bbccff", "#99bbff", "#4466cc", "#224466"][iTheta]);
+        grd.addColorStop(1, ["#6688cc", "#224499", "#112244", "#001133"][iTheta]);
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, vis.canvas.width, vis.canvas.height);
+        let dx = vis.zoomed ? vis.dxZoom : 0;
+        let dy = vis.zoomed ? vis.dyZoom : 0;
+
+        ctx.save();
+        ctx.translate(vis.canvas.width / 2 + dx, vis.canvas.height / 2 + dy);
+        ctx.rotate(([180, 0, 0, 180][iTheta] + phi * [-1, 0, 0, 1][iTheta]) * Math.PI / 180);
+        let imgId = [vis.fields[iField], vis.zoomed ? "H" : "L", thetaStr, phiStr].join("_");
+        let img = vis.getImage(imgId);
+        if (img.width != 0) {
+            ctx.drawImage(img, -img.width / 2, -img.width / 2, img.width, img.width);
+        }
+        ctx.restore();
+
+        vis.drawAxes(ctx, phi, [180, 120, 60, 0][iTheta]);
+
+        img = vis.getImage(vis.fields[iField] + "Legend");
+        if (img.width != 0) {
+            ctx.drawImage(img, -100, 50, 300, 300);
+        }
+    }
     
     vis.zoom = function() {
         vis.zoomed = !vis.zoomed;
@@ -180,7 +221,7 @@ export const visualizeFlow360Case = function(){
     vis.zoomButton.innerHTML = "zoom";
 
     vis.fieldButton.setAttribute("class", "magnify");
-    vis.fieldButton.disabled = true;
+    vis.fieldButton.onclick = vis.redrawWithClick;
 
     vis.phiSlider.setAttribute("type", "range");
     vis.phiSlider.setAttribute("class", "slider hslider");
