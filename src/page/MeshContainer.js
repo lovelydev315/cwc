@@ -753,9 +753,11 @@ class MeshContainer extends React.Component {
 
     onMeshFileSelected(event) {
       let file = this.fileRef.current.files[0];
-      const allowedExtensions = ['ugrid', 'gz', 'bz2'];
-      const fileExtension = file.name.split('.').pop();
-      const specificFileName = file.name.split('.').shift();
+      const allowedExtensions = ['ugrid', 'gz', 'bz2', 'cgns'];
+      let fileNameArray = file.name.split('.');
+      let fileExtension = fileNameArray.pop();
+      if(fileExtension === "gz") fileExtension = fileNameArray.pop();
+      const specificFileName = fileNameArray.join(".");
       const extensionExist = !!allowedExtensions.find(ext => ext === fileExtension);
       if (extensionExist && fileExtension === "ugrid") {
         this.setState({
