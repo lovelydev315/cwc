@@ -80,7 +80,7 @@ class MeshContainer extends React.Component {
             isNewMesh: false,
             isNewCase: false,
             isUploadingMesh: false,
-            newMeshEndianType: "little",
+            newMeshEndianType: "",
             newMeshFormat: "aflr3",
             refreshInterval: this.props.refreshInterval ? this.props.refreshInterval : 30,
             lastListTime: "",
@@ -93,6 +93,10 @@ class MeshContainer extends React.Component {
             isMeshAllChecked: false,
             meshChecked: [],
             isFormatEndianness: false,
+            endiannessDisable: false,
+            formatEndiannessRequired: false,
+            endiannessSelected: false,
+            showEndiannessError: false
         };
     }
 
@@ -123,14 +127,32 @@ class MeshContainer extends React.Component {
     }
 
     handleNewMeshClose(e) {
-        this.setState({isNewMesh: false, showUploadProgress: false});
+        this.setState({
+          isNewMesh: false,
+          showUploadProgress: false,
+          formatEndiannessRequired: false,
+          endiannessSelected: false,
+          showEndiannessError: false});
     }
 
     handleNewCaseClose(e) {
-        this.setState({isNewCase: false});
+        this.setState({
+          isNewCase: false
+        });
     }
 
     handleNewMeshSubmit(e) {
+        if(this.state.formatEndiannessRequired && !this.state.endiannessSelected) {
+          this.setState({
+            showEndiannessError: true
+          });
+          return;
+        }
+        else {
+          this.setState({
+            showEndiannessError: false
+          });
+        }
         const supported_ext_list = ['.ugrid', '.ugrid.bz2', '.ugrid.gz', '.cgns'];
         this.setState({isNewMesh: false, showUploadProgress: true});
         if (!this.fileRef.current.files[0]) {
@@ -234,11 +256,12 @@ class MeshContainer extends React.Component {
     }
 
     render() {
-        const {meshList, uploadedFilePercent, uploadResult, versions} = this.props;
-        const { selectedSolverVer, isNewCase}  = this.state;
-        //console.log(this.state);
+      const {meshList, uploadedFilePercent, uploadResult, versions} = this.props;
+      const { selectedSolverVer, isNewCase}  = this.state;
+      //console.log(this.state);
       const s3User = getS3User();
       const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
+      // const hasOwnership = true;
 
       const drop_down_refresh = { 10: '10 seconds', 30: '30 seconds',
           60: '1 minute', 0: 'Disabled'};
@@ -573,23 +596,35 @@ class MeshContainer extends React.Component {
                                         <FormLabel>Format & Endianness</FormLabel>
                                     </Col>
 
-                                    <Col sm={10}>
+                                    <Col sm={10} className={this.state.showEndiannessError ? "border border-danger" : ""}>
                                         <InputGroup>
                                             <InputGroup.Prepend>
+                                              { this.state.endiannessDisable ? 
+                                                <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
+                                                                  checked={this.checkMeshOptionType("little", "aflr3")}
+                                                                  onChange={this.handleOptionChange} disabled/> :
                                                 <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
                                                                   checked={this.checkMeshOptionType("little", "aflr3")}
                                                                   onChange={this.handleOptionChange}/>
+                                              }
                                             </InputGroup.Prepend>
                                             <InputGroup.Text>Little endian aflr3</InputGroup.Text>
+                                            <p className="text-danger m-3">For lb8.ugrid</p>
                                         </InputGroup>
 
                                         <InputGroup>
                                             <InputGroup.Prepend>
+                                              { this.state.endiannessDisable ? 
+                                                <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
+                                                                  checked={this.checkMeshOptionType("big", "aflr3")}
+                                                                  onChange={this.handleOptionChange} disabled/> :
                                                 <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
                                                                   checked={this.checkMeshOptionType("big", "aflr3")}
                                                                   onChange={this.handleOptionChange}/>
+                                              }
                                             </InputGroup.Prepend>
                                             <InputGroup.Text>Big endian aflr3</InputGroup.Text>
+                                            <p className="text-danger m-3">For b8.ugrid</p>
                                         </InputGroup>
 
                                     </Col>
@@ -607,7 +642,10 @@ class MeshContainer extends React.Component {
                               options={versions}
                             />}
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer style={{position: "relative"}}>
+                        {this.state.showEndiannessError &&
+                          <p className="m-0 text-danger" style={{position: "absolute", top: "10px", left: "25px", fontSize: "16px"}}><span className="font-weight-bold">Format & Endianness</span> required!</p>
+                        }
                             <Button bsStyle="primary"
                                     onClick={this.handleNewMeshSubmit}>Submit</Button>
                             <Button onClick={this.handleNewMeshClose}>Close</Button>
@@ -630,7 +668,8 @@ class MeshContainer extends React.Component {
     handleOptionChange(changeEvent) {
         this.setState({
             newMeshEndianType: changeEvent.target.value,
-            newMeshFormat: "aflr3"
+            newMeshFormat: "aflr3",
+            endiannessSelected: true
         });
     };
 
@@ -714,31 +753,47 @@ class MeshContainer extends React.Component {
 
     onMeshFileSelected(event) {
       let file = this.fileRef.current.files[0];
-      const allowedExtensions = ['ugrid', 'gz', 'bz2'];
-      const fileExtension = file.name.split('.').pop();
-      const specificFileName = file.name.split('.').shift();
+      const allowedExtensions = ['ugrid', 'gz', 'bz2', 'cgns'];
+      let fileNameArray = file.name.split('.');
+      let fileExtension = fileNameArray.pop();
+      if(fileExtension === "gz") fileExtension = fileNameArray.pop();
+      const specificFileName = fileNameArray.join(".");
       const extensionExist = !!allowedExtensions.find(ext => ext === fileExtension);
-      const fileNameContains = specificFileName.includes('b8');
-      if (extensionExist) {
+      if (extensionExist && fileExtension === "ugrid") {
         this.setState({
-          isFormatEndianness: true,
+          isFormatEndianness: true
         });
       } else {
         this.setState({
           isFormatEndianness: false,
         });
       }
-      if(file) {
-        if(fileNameContains) {
+      if(file && fileExtension === "ugrid") {
+        if(specificFileName.includes('lb8')) {
+          this.setState({
+            newMeshEndianType: 'little',
+            newMeshFormat: "aflr3",
+            endiannessDisable: true,
+            formatEndiannessRequired: true,
+            endiannessSelected: true
+          });
+        }
+        else if (specificFileName.includes('b8')) {
           this.setState({
             newMeshEndianType: 'big',
-            newMeshFormat: "aflr3"
+            newMeshFormat: "aflr3",
+            endiannessDisable: true,
+            formatEndiannessRequired: true,
+            endiannessSelected: true
           });
         }
         else {
           this.setState({
-            newMeshEndianType: 'little',
-            newMeshFormat: "aflr3"
+            newMeshEndianType: '',
+            newMeshFormat: "aflr3",
+            endiannessDisable: false,
+            formatEndiannessRequired: true,
+            endiannessSelected: false
           });
         }
       }

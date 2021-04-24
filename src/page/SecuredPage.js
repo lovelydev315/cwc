@@ -108,10 +108,8 @@ class WorkspacePage extends React.Component {
                       <Route exact path={'/app/mesh_factory'} component={MeshFactoryContainer}/>
                       <Route exact path={'/app/billing'} component={BillingContainer}/>
                       <ControlRoute exact path={'/app/control'} component={ControlPage}/>
-                      <Route
-                        path={'/app/case/:meshId'}
-                        component={CaseContainer}
-                      />
+                      <Route exact path={'/app/case/:meshId'} component={CaseContainer}/>
+                      <Redirect to={"/app/case/all"} />
                   </div>
               </div>)
         }

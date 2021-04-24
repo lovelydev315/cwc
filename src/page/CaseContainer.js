@@ -156,7 +156,8 @@ class CaseContainer extends React.Component {
         const drop_down_refresh = {0: 'Disabled', 10: '10 seconds', 30: '30 seconds',
           60: '1 minute'};
         let downloadFiles = [
-          {name:'Volume', value:"results/volumes.tar.gz"}
+          {name:"Flow360 Json", value:"flow360.json", forceDownload: true}
+          ,{name:'Volume', value:"results/volumes.tar.gz"}
           ,{name:'Surfaces', value:"results/surfaces.tar.gz"}
           ];
         if(s3User.admin) {
@@ -316,9 +317,10 @@ class CaseContainer extends React.Component {
 
                                                     <Dropdown.Menu>
                                                       {
-                                                       downloadFiles.map((item, index) => {
-                                                        return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value)}>{item.name}</DropdownItem>
-                                                      })}
+                                                        downloadFiles.map((item, index) => {
+                                                          return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value, caseItem.caseName, caseItem.forceDownload)}>{item.name}</DropdownItem>
+                                                        })
+                                                      }
                                                     </Dropdown.Menu>
                                                   </Dropdown>
                                                 </OverlayTrigger>
@@ -452,14 +454,33 @@ class CaseContainer extends React.Component {
         this.setState({isNewCase: false});
     }
 
-    openDownload(e, case_id, filename) {
+    openDownload(e, case_id, filename, forceDownload) {
       //console.log(filename);
       e.stopPropagation();
       awsBuildSignedUrl(case_id, filename, (signedUrl) => {
         if (signedUrl) {
-          let a = document.createElement('a');
-          a.href = signedUrl;
-          a.click();
+          if(forceDownload) {
+            axios.get(signedUrl).then((response) => {
+              if(response.data) {
+                const element = document.createElement("a");
+                const output = JSON.stringify(response.data, null, "   ");
+                const file = new Blob([output], {type: 'text/plain'});
+                element.href = URL.createObjectURL(file);
+                element.download = filename;
+                document.body.appendChild(element); // Required for this to work in FireFox
+                element.click();
+                document.body.removeChild(element);
+              }
+              else {
+                alert(`${filename} not found.`);
+              }
+            })
+          }
+          else {
+            let a = document.createElement('a');
+            a.href = signedUrl;
+            a.click();
+          }
         } else {
           alert(`${filename} not found.`);
         }

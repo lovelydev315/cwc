@@ -40,7 +40,6 @@ export default class ForcesBox extends React.Component {
     }
 
     drawChart() {
-
         let forces = [];
         const get_total_forces_body = this.props.data;
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
@@ -263,8 +262,13 @@ export default class ForcesBox extends React.Component {
     }
     render() {
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
-        <div id={`forces-${this.props.id}-reading`}></div>
-        <div id={`forces-${this.props.id}`}></div>
+        {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
+            (<div><div id={`forces-${this.props.id}-reading`}></div>
+             <div id={`forces-${this.props.id}`}></div></div>) :
+            (<div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+             </div></div>)
+        }
         </div>
     }
 

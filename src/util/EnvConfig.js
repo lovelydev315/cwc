@@ -30,7 +30,7 @@ const prod = {
     },
     webapiV1: {
         REGION: 'us-gov-west-1',
-        URL: "https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1",
+        URL: " /beta-1",
         SERVER: 'dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com'
     },
     webapiV2: {
