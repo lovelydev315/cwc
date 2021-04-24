@@ -578,6 +578,7 @@ class MeshContainer extends React.Component {
                                 <br />
                                 <FormKendo
                                   ref = {this.flow360mesh}
+
                                   render={() => (
                                   <FormElementKendo>
                                     <FieldKendo
@@ -591,40 +592,33 @@ class MeshContainer extends React.Component {
                                       validator={jsonValidator}
                                     />
                                   </FormElementKendo>)} /><br />
-                                { this.state.isFormatEndianness && <FormGroup >
-                                    <Col sm={10}>
-                                        <FormLabel>Format & Endianness</FormLabel>
-                                    </Col>
-
-                                    <Col sm={10} className={this.state.showEndiannessError ? "border border-danger" : ""}>
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                              { this.state.endiannessDisable ? 
-                                                <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
-                                                                  checked={this.checkMeshOptionType("little", "aflr3")}
-                                                                  onChange={this.handleOptionChange} disabled/> :
-                                                <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
-                                                                  checked={this.checkMeshOptionType("little", "aflr3")}
-                                                                  onChange={this.handleOptionChange}/>
-                                              }
-                                            </InputGroup.Prepend>
-                                            <InputGroup.Text>Little endian aflr3</InputGroup.Text>
-                                            <p className="text-danger m-3">For lb8.ugrid</p>
+                                { this.state.isFormatEndianness && <FormGroup style={{position: "relative"}}>
+                                    <FormLabel className={this.state.showEndiannessError ? "text-danger" : ""} style={{position: "absolute", top: "-12px", left: "10px", background: "white", zIndex: 100, padding: "0 10px", fontSize: "15px"}}>Format & Endianness</FormLabel>
+                                    <Col sm={12} className={this.state.showEndiannessError ? "border border-danger p-3" : "border p-3"}>
+                                        <InputGroup className="d-flex align-items-end">
+                                            { this.state.endiannessDisable ? 
+                                              <input type="radio" className="m-2" name="radioGroup" value={"little"} id="littleEndianAflr3"
+                                                                checked={this.checkMeshOptionType("little", "aflr3")}
+                                                                onChange={this.handleOptionChange} disabled/> :
+                                              <input type="radio" className="m-2" name="radioGroup" value={"little"} id="littleEndianAflr3"
+                                                                checked={this.checkMeshOptionType("little", "aflr3")}
+                                                                onChange={this.handleOptionChange}/>
+                                            }
+                                            <label for="littleEndianAflr3" style={{fontSize: "18px", margin: "1px 4px"}}>Little endian aflr3</label>
+                                            <p className="text-danger m-0 ml-3">For lb8.ugrid</p>
                                         </InputGroup>
 
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                              { this.state.endiannessDisable ? 
-                                                <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
-                                                                  checked={this.checkMeshOptionType("big", "aflr3")}
-                                                                  onChange={this.handleOptionChange} disabled/> :
-                                                <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
-                                                                  checked={this.checkMeshOptionType("big", "aflr3")}
-                                                                  onChange={this.handleOptionChange}/>
-                                              }
-                                            </InputGroup.Prepend>
-                                            <InputGroup.Text>Big endian aflr3</InputGroup.Text>
-                                            <p className="text-danger m-3">For b8.ugrid</p>
+                                        <InputGroup className="d-flex align-items-end">
+                                            { this.state.endiannessDisable ? 
+                                              <input type="radio" className="m-2" name="radioGroup" value={"big"} id="bigEndianAflr3"
+                                                                checked={this.checkMeshOptionType("big", "aflr3")}
+                                                                onChange={this.handleOptionChange} disabled/> :
+                                              <input type="radio" className="m-2" name="radioGroup" value={"big"} id="bigEndianAflr3"
+                                                                checked={this.checkMeshOptionType("big", "aflr3")}
+                                                                onChange={this.handleOptionChange}/>
+                                            }
+                                            <label for="bigEndianAflr3" style={{fontSize: "18px", margin: "1px 4px"}}>Big endian aflr3</label>
+                                            <p className="text-danger m-0 ml-3">For b8.ugrid</p>
                                         </InputGroup>
 
                                     </Col>
@@ -643,9 +637,6 @@ class MeshContainer extends React.Component {
                             />}
                         </Modal.Body>
                         <Modal.Footer style={{position: "relative"}}>
-                        {this.state.showEndiannessError &&
-                          <p className="m-0 text-danger" style={{position: "absolute", top: "10px", left: "25px", fontSize: "16px"}}><span className="font-weight-bold">Format & Endianness</span> required!</p>
-                        }
                             <Button bsStyle="primary"
                                     onClick={this.handleNewMeshSubmit}>Submit</Button>
                             <Button onClick={this.handleNewMeshClose}>Close</Button>
@@ -669,7 +660,8 @@ class MeshContainer extends React.Component {
         this.setState({
             newMeshEndianType: changeEvent.target.value,
             newMeshFormat: "aflr3",
-            endiannessSelected: true
+            endiannessSelected: true,
+            showEndiannessError: false
         });
     };
 
@@ -756,7 +748,7 @@ class MeshContainer extends React.Component {
       const allowedExtensions = ['ugrid', 'gz', 'bz2', 'cgns'];
       let fileNameArray = file.name.split('.');
       let fileExtension = fileNameArray.pop();
-      if(fileExtension === "gz") fileExtension = fileNameArray.pop();
+      if(["gz", "bz2"].includes(fileExtension)) fileExtension = fileNameArray.pop();
       const specificFileName = fileNameArray.join(".");
       const extensionExist = !!allowedExtensions.find(ext => ext === fileExtension);
       if (extensionExist && fileExtension === "ugrid") {
