@@ -12,6 +12,7 @@ const axes = [
 const series = {
   showPoints: false,
 }
+let colorsWithNames = {};
 export default class ResidualBox extends React.Component{
   
       constructor(props){
@@ -51,7 +52,6 @@ export default class ResidualBox extends React.Component{
             }
 
             var resid = [];
-            let colorsWithNames = [];
             let names= {};
             for (let i = 0; i < get_residual_body.step.length; i++) {
                 let obj = {};
@@ -69,26 +69,23 @@ export default class ResidualBox extends React.Component{
                     );
                 })
             }
-            colorsWithNames.push(
-                names
-             )
+            colorsWithNames = names;
             data = [];
-            for(let eachName in colorsWithNames[0]) {
+            for(let eachName in colorsWithNames) {
                 let eachData={label: eachName, color: colorsWithNames[eachName], data: []};
                 for(let each of resid) {
                     if(each.step === eachData.data.length) eachData.data.push([each.step, each[eachName]]);
                 }
                 data.push(eachData);
             }
-            this.colorsWithNames = colorsWithNames[0];
-            console.log(resid, //{step, residualMass, ...
-                colorsWithNames[0] //{name: color}
-            )
         }
 
     }
     render() {
-    console.log("data",data)
+        console.log("data",data)
+        console.log(colorsWithNames)
+        console.log(axes)
+        console.log(series)
         return <div className="margin10" id={`d3line-${this.props.id}`} style={{ width: this.props.data.width, height: this.props.data.height}}>
           {data.length && <Chart data={data} axes={axes} series={series} tooltip />}
         </div>
