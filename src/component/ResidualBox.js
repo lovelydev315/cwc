@@ -76,6 +76,7 @@ export default class ResidualBox extends React.Component{
                 data.push(eachData);
             }
             console.log(names)
+            console.log(get_residual_body)
         }
 
     }

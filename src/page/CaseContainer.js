@@ -41,30 +41,12 @@ import {visualizeFlow360Case} from "../component/visualizeCase-21.1.1";
 import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo} from '@progress/kendo-react-form';
 import { FormJSONTextArea, jsonValidator } from "../component/kendo-form-component";
 import ConvertDateToLocal from '../util/DateUtils';
-import { Chart } from 'react-charts'
 
 const DropdownItem = Dropdown.Item;
 
 const trStyle = {
     backgroundColor: 'transparent'
 };
-
-const data = [
-      {
-        label: 'Series 1',
-        color: "#432513",
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
-      },
-      {
-        label: 'Series 2',
-        color: "#549021",
-        data: [[0, 3], [1, 1], [2, 5], [3, 6], [4, 4]]
-      }
-    ]
-    const axes = [
-      { primary: true, type: 'linear', position: 'bottom' },
-      { type: 'linear', position: 'left' }
-    ]
 
 const downloadToggle = React.forwardRef(({ children, onClick }, ref) => (
   <span
@@ -189,14 +171,6 @@ class CaseContainer extends React.Component {
 
         return (
             <Card>
-            <div
-      style={{
-        width: '400px',
-        height: '300px'
-      }}
-    >
-      <Chart data={data} axes={axes} />
-    </div>
                 <Card.Header>
                       <InputGroup className="flex align-items-center">
                         {hasOwnership && <Confirm description="Are you sure? Deletion is not reversible.">
