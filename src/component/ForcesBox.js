@@ -2,14 +2,14 @@ import React from "react";
 import * as d3 from "d3";
 import $ from 'jquery';
 
-let avg_CL;
-let avg_CD; 
-let avg_CFx;
-let avg_CFy;
-let avg_CFz;
-let avg_CMx;
-let avg_CMy;
-let avg_CMz;
+let avg_CL = [];
+let avg_CD = []; 
+let avg_CFx = [];
+let avg_CFy = [];
+let avg_CFz = [];
+let avg_CMx = [];
+let avg_CMy = [];
+let avg_CMz = [];
 let forces = [];
 
 export default class ForcesBox extends React.Component {
@@ -261,6 +261,7 @@ export default class ForcesBox extends React.Component {
     }
     render() {
         console.log(forces);
+        console.log(avg_CL);
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
             <div>
