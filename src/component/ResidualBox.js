@@ -13,8 +13,6 @@ const series = {
   showPoints: false,
 }
 let colorsWithNames = {};
-let width = "0px";
-let height = "0px";
 
 export default class ResidualBox extends React.Component{
 
@@ -77,8 +75,6 @@ export default class ResidualBox extends React.Component{
                 }
                 data.push(eachData);
             }
-            width = get_residual_body.width;
-            height = get_residual_body.height;
         }
         console.log(get_residual_body)
 
@@ -88,9 +84,7 @@ export default class ResidualBox extends React.Component{
         console.log(colorsWithNames)
         console.log(axes)
         console.log(series)
-        console.log(this.props.data.width)
-        console.log(this.props.data.height)
-        return <div className="margin10" id={`d3line-${this.props.id}`} style={{ width: width, height: height}}>
+        return <div style={{ width: this.props.width, height: this.props.height}}>
           {data.length && <Chart data={data} axes={axes} series={series} tooltip />}
         </div>
     }
