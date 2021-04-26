@@ -2,6 +2,16 @@ import React from "react";
 import * as d3 from "d3";
 import $ from 'jquery';
 
+let avg_CL;
+let avg_CD; 
+let avg_CFx;
+let avg_CFy;
+let avg_CFz;
+let avg_CMx;
+let avg_CMy;
+let avg_CMz;
+let forces = [];
+
 export default class ForcesBox extends React.Component {
 
     componentDidMount() {
@@ -40,20 +50,18 @@ export default class ForcesBox extends React.Component {
     }
 
     drawChart() {
-        let forces = [];
         const get_total_forces_body = this.props.data;
-        console.log("total_forces", get_total_forces_body);
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
         $(`#forces-${this.props.id}-reading`).empty();
         if(get_total_forces_body) {
-            let avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
-            let avg_CD = this.get_average_forces(get_total_forces_body["CD"]);
-            let avg_CFx = this.get_average_forces(get_total_forces_body["CFx"]);
-            let avg_CFy = this.get_average_forces(get_total_forces_body["CFy"]);
-            let avg_CFz = this.get_average_forces(get_total_forces_body["CFz"]);
-            let avg_CMx = this.get_average_forces(get_total_forces_body["CMx"]);
-            let avg_CMy = this.get_average_forces(get_total_forces_body["CMy"]);
-            let avg_CMz = this.get_average_forces(get_total_forces_body["CMz"]);
+            avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
+            avg_CD = this.get_average_forces(get_total_forces_body["CD"]);
+            avg_CFx = this.get_average_forces(get_total_forces_body["CFx"]);
+            avg_CFy = this.get_average_forces(get_total_forces_body["CFy"]);
+            avg_CFz = this.get_average_forces(get_total_forces_body["CFz"]);
+            avg_CMx = this.get_average_forces(get_total_forces_body["CMx"]);
+            avg_CMy = this.get_average_forces(get_total_forces_body["CMy"]);
+            avg_CMz = this.get_average_forces(get_total_forces_body["CMz"]);
             for (let i = 0; i < get_total_forces_body.steps.length; ++i) {
                 forces.push({
                     "steps": get_total_forces_body["steps"][i],
@@ -75,16 +83,6 @@ export default class ForcesBox extends React.Component {
                     "CMz_avg": avg_CMz[i],
                 });
             }
-            $(`#forces-${this.props.id}-reading`).append(
-              '<table  style="width:600px;" ><tr><th>CL: </th><th>' + this.expo(avg_CL[avg_CL.length-1],4) +'</th><th>' +
-              'CD: </th><th>' + this.expo(avg_CD[avg_CD.length-1], 4) + '</th><th></th></tr><tr><th>' +
-              'CFx:</th><th>' + this.expo(avg_CFx[avg_CFx.length-1],4)+ '</th><th>' +
-              'CFy:</th><th>' + this.expo(avg_CFy[avg_CFy.length-1], 4)+ '</th><th>' +
-              'CFz:</th><th>' + this.expo(avg_CFz[avg_CFz.length-1], 4)+ '</th></tr><tr><th>' +
-              'CMx:</th><th>' + this.expo(avg_CMx[avg_CMx.length-1],4) + '</th><th>' +
-              'CMy:</th><th>' + this.expo(avg_CMy[avg_CMy.length-1], 4)+ '</th><th>' +
-              'CMz:</th><th>' + this.expo(avg_CMz[avg_CMz.length-1], 4) + '</th></tr></table>'
-            );
 
             this.drawForces(forces,{
                 'CL' : 'blue',
@@ -262,13 +260,44 @@ export default class ForcesBox extends React.Component {
             )
     }
     render() {
+        console.log(forces);
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
-            (<div><div id={`forces-${this.props.id}-reading`}></div>
-             <div id={`forces-${this.props.id}`}></div></div>) :
-            (<div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
-              <span className="sr-only">Loading...</span>
-             </div></div>)
+            <div>
+                <div id={`forces-${this.props.id}-reading`}>
+                      <table  style="width:600px;" >
+                        <tr>
+                            <th>CL: </th>
+                            <th>{this.expo(avg_CL[avg_CL.length-1],4)}</th>
+                            <th>CD: </th>
+                            <th>{this.expo(avg_CD[avg_CD.length-1], 4)}</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>CFx:</th>
+                            <th>{this.expo(avg_CFx[avg_CFx.length-1],4)}</th>
+                            <th>CFy:</th>
+                            <th>{this.expo(avg_CFy[avg_CFy.length-1], 4)}</th>
+                            <th>CFz:</th>
+                            <th>{this.expo(avg_CFz[avg_CFz.length-1], 4)}</th>
+                        </tr>
+                        <tr>
+                            <th>CMx:</th>
+                            <th>{this.expo(avg_CMx[avg_CMx.length-1],4)}</th>
+                            <th>CMy:</th>
+                            <th>{this.expo(avg_CMy[avg_CMy.length-1], 4)}</th>
+                            <th>CMz:</th>
+                            <th>{this.expo(avg_CMz[avg_CMz.length-1], 4)}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id={`forces-${this.props.id}`}></div>
+            </div> :
+            <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}>
+                <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div>
         }
         </div>
     }
