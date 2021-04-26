@@ -57,7 +57,7 @@ export default class ResidualBox extends React.Component{
                    const name = buildName(item); 
                     ;
                     let colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#32efba', '#007bff', '#BD9E39', '#BDBDBD', '#5254A3', '#AD494A', '#A55194', '#8C564B', '#969696', '#9C9EDE', '#E7969C', '#DE9ED6', '#C49C94', '#D9D9D9', '#393B79', '#843C39', '#7B4173', '#8C6D31', '#636363', '#6B6ECF', '#D6616B', '#CE6DBD', '#BD9E39', '#BDBDBD', '#5254A3', '#AD494A', '#A55194', '#8C564B', '#969696', '#9C9EDE', '#E7969C', '#DE9ED6', '#C49C94', '#D9D9D9'];
-                    if (name !== 'step') {
+                    if (name !== 'step' && name) {
                         names[name] = colors[index]; 
                     }
                     obj[name] = get_residual_body[item][i];
@@ -75,15 +75,13 @@ export default class ResidualBox extends React.Component{
                 }
                 data.push(eachData);
             }
-            console.log(names)
-            console.log(get_residual_body)
         }
 
     }
     render() {
         return <div style={{ width: this.props.width, height: this.props.height, position: "relative"}}>
             {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "20px", right: "20px"}}>
-                {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0">{key}</p></div>)}
+                {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0">{key}</p></div>)}
             </div> : <div></div>}
           {data.length ? <Chart data={data} axes={axes} series={series} /> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
