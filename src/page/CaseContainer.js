@@ -52,10 +52,12 @@ const trStyle = {
 const data = [
       {
         label: 'Series 1',
+        color: "#432513",
         data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
       },
       {
         label: 'Series 2',
+        color: "#549021",
         data: [[0, 3], [1, 1], [2, 5], [3, 6], [4, 4]]
       }
     ]

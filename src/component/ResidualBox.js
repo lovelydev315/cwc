@@ -71,21 +71,21 @@ export default class ResidualBox extends React.Component{
             for(let eachName in colorsWithNames) {
                 let eachData={label: eachName, color: colorsWithNames[eachName], data: []};
                 for(let each of resid) {
-                    if(each.step === eachData.data.length) eachData.data.push([each.step, each[eachName]]);
+                    if(each.step > eachData.data[eachData.data.length - 1][0]) eachData.data.push([each.step, each[eachName]]);
                 }
                 data.push(eachData);
             }
+            console.log(resid)
         }
         console.log(get_residual_body)
 
     }
     render() {
         console.log("data",data)
-        console.log(colorsWithNames)
-        console.log(axes)
-        console.log(series)
         return <div style={{ width: this.props.width, height: this.props.height}}>
-          {data.length && <Chart data={data} axes={axes} series={series} tooltip />}
+          {data.length ? <Chart data={data} axes={axes} series={series} tooltip /> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+             </div></div>}
         </div>
     }
 }
