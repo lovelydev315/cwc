@@ -84,8 +84,8 @@ export default class ResidualBox extends React.Component{
                 {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
             </div> : <div></div>}
             {data.length ? <>
-                <div style={{position: "absolute", top: 0, left: 0, alignItems: "center"}}>
-                    <p style={{writingMode: "vertical-lr", textOrientation: "upright"}}>Resiual</p>
+                <div style={{position: "absolute", top: 0, left: 0, display: "flex", alignItems: "center"}}>
+                    <p style={{writingMode: "vertical-lr", textOrientation: "upright", margin: 0}}>Resiual</p>
                 </div>
                 <Chart data={data} axes={axes} series={series} />
             </> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
