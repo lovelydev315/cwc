@@ -7,7 +7,7 @@ let data = [];
 
 const axes = [
   { primary: true, type: 'linear', position: 'bottom' },
-  { type: 'linear', position: 'left' }
+  { type: 'log', position: 'left' }
 ]
 const series = {
   showPoints: false,
