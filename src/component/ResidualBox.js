@@ -6,8 +6,8 @@ import { Chart } from "react-charts"
 let data = [];
 
 const axes = [
-  { primary: true, type: 'linear', position: 'bottom', label: "step" },
-  { type: 'log', position: 'left', label: "Residual" }
+  { primary: true, type: 'linear', position: 'bottom' },
+  { type: 'log', position: 'left', min: 0 }
 ]
 const series = {
   showPoints: false,
@@ -79,13 +79,11 @@ export default class ResidualBox extends React.Component{
 
     }
     render() {
-        return <div>
-            {Object.keys(colorsWithNames).length ? <div style={{marginLeft: "auto", padding: "8px"}}>
+        return <div style={{ width: this.props.width, height: this.props.height, position: "relative"}}>
+            {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "20px", right: "20px", padding: "8px"}}>
                 {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
             </div> : <div></div>}
-          {data.length ? <div style={{ width: this.props.width, height: this.props.height}}>
-          <p style={{float: "left"}}>Residual</p>
-          <Chart data={data} axes={axes} series={series} /> </div>: <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
+          {data.length ? <Chart data={data} axes={axes} series={series} /> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
              </div></div>
             }
