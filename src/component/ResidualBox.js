@@ -6,8 +6,8 @@ import { Chart } from "react-charts"
 let data = [];
 
 const axes = [
-  { primary: true, type: 'linear', position: 'bottom' },
-  { type: 'log', position: 'left' }
+  { primary: true, type: 'linear', position: 'bottom', label: "step" },
+  { type: 'log', position: 'left', label: "Residual" }
 ]
 const series = {
   showPoints: false,
