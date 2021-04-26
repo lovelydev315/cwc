@@ -4,18 +4,18 @@ import "../style/default.css"
 import { Chart } from "react-charts"
 
 let data = [];
+
+const axes = [
+  { primary: true, type: 'linear', position: 'bottom' },
+  { type: 'linear', position: 'left' }
+]
+const series = {
+  showPoints: false,
+}
 export default class ResidualBox extends React.Component{
   
       constructor(props){
         super(props);
-        const series = {
-          showPoints: false,
-        }
-
-        const axes = [
-          { primary: true, type: 'linear', position: 'bottom' },
-          { type: 'log', position: 'left' }
-        ]
         let colorsWithNames;
       }
     componentDidMount() {
@@ -90,6 +90,7 @@ export default class ResidualBox extends React.Component{
     render() {
     console.log("data",data)
         return <div className="margin10" id={`d3line-${this.props.id}`} style={{ width: this.props.data.width, height: this.props.data.height}}>
+          {data.length && <Chart data={data} axes={axes} series={series} tooltip />}
         </div>
     }
 }
