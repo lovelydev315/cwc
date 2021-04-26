@@ -266,30 +266,32 @@ export default class ForcesBox extends React.Component {
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
             <div>
                 <div id={`forces-${this.props.id}-reading`}>
-                      <table  style="width:600px;" >
-                        <tr>
-                            <th>CL: </th>
-                            <th>{this.expo(avg_CL[avg_CL.length-1],4)}</th>
-                            <th>CD: </th>
-                            <th>{this.expo(avg_CD[avg_CD.length-1], 4)}</th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th>CFx:</th>
-                            <th>{this.expo(avg_CFx[avg_CFx.length-1],4)}</th>
-                            <th>CFy:</th>
-                            <th>{this.expo(avg_CFy[avg_CFy.length-1], 4)}</th>
-                            <th>CFz:</th>
-                            <th>{this.expo(avg_CFz[avg_CFz.length-1], 4)}</th>
-                        </tr>
-                        <tr>
-                            <th>CMx:</th>
-                            <th>{this.expo(avg_CMx[avg_CMx.length-1],4)}</th>
-                            <th>CMy:</th>
-                            <th>{this.expo(avg_CMy[avg_CMy.length-1], 4)}</th>
-                            <th>CMz:</th>
-                            <th>{this.expo(avg_CMz[avg_CMz.length-1], 4)}</th>
-                        </tr>
+                      <table  style="width:600px;">
+                        <tbody>
+                            <tr>
+                                <th>CL: </th>
+                                <th>{this.expo(avg_CL[avg_CL.length-1],4)}</th>
+                                <th>CD: </th>
+                                <th>{this.expo(avg_CD[avg_CD.length-1], 4)}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th>CFx:</th>
+                                <th>{this.expo(avg_CFx[avg_CFx.length-1],4)}</th>
+                                <th>CFy:</th>
+                                <th>{this.expo(avg_CFy[avg_CFy.length-1], 4)}</th>
+                                <th>CFz:</th>
+                                <th>{this.expo(avg_CFz[avg_CFz.length-1], 4)}</th>
+                            </tr>
+                            <tr>
+                                <th>CMx:</th>
+                                <th>{this.expo(avg_CMx[avg_CMx.length-1],4)}</th>
+                                <th>CMy:</th>
+                                <th>{this.expo(avg_CMy[avg_CMy.length-1], 4)}</th>
+                                <th>CMz:</th>
+                                <th>{this.expo(avg_CMz[avg_CMz.length-1], 4)}</th>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div id={`forces-${this.props.id}`}></div>

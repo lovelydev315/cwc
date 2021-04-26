@@ -81,7 +81,7 @@ export default class ResidualBox extends React.Component{
     render() {
         return <div style={{ width: this.props.width, height: this.props.height, position: "relative", margin: "10px auto 30px 30px"}}>
             {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "30px", right: "20px", padding: "8px"}}>
-                {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
+                {Object.keys(colorsWithNames).map((key, index) => <div key={index} style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
             </div> : <div></div>}
             {data.length ? <>
                 <div style={{position: "absolute", top: 0, left: "-20px", height: "100%", display: "flex", alignItems: "center"}}>
