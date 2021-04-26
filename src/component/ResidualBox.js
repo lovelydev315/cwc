@@ -75,18 +75,16 @@ export default class ResidualBox extends React.Component{
                 }
                 data.push(eachData);
             }
-            console.log(resid)
+            console.log(names)
         }
-        console.log(get_residual_body)
 
     }
     render() {
-        console.log("data",data)
         return <div style={{ width: this.props.width, height: this.props.height, position: "relative"}}>
             {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "20px", right: "20px"}}>
-                {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px"}}></span><p className="m-0">{key}</p></div>)}
+                {Object.keys(colorsWithNames).map(key => <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0">{key}</p></div>)}
             </div> : <div></div>}
-          {data.length ? <Chart data={data} axes={axes} series={series} tooltip /> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
+          {data.length ? <Chart data={data} axes={axes} series={series} /> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
              </div></div>
             }
