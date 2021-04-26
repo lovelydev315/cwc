@@ -71,7 +71,7 @@ export default class ResidualBox extends React.Component{
             for(let eachName in colorsWithNames) {
                 let eachData={label: eachName, color: colorsWithNames[eachName], data: []};
                 for(let each of resid) {
-                    if(each.step > eachData.data[eachData.data.length - 1][0]) eachData.data.push([each.step, each[eachName]]);
+                    if(eachData.data.length === 0 || each.step > eachData.data[eachData.data.length - 1][0]) eachData.data.push([each.step, each[eachName]]);
                 }
                 data.push(eachData);
             }
