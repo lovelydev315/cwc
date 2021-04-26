@@ -9,7 +9,7 @@ import CreatableSelect from "react-select/creatable";
 import {buildBillingChartData, generateBilling, generateBillingNew} from "./Shared";
 import {
     Badge,
-    Button, Card, DropdownButton, DropdownItem,
+    Button, Card, DropdownButton, Dropdown,
     FormGroup, FormLabel, InputGroup,
     Row, Tab,
     Table, Tabs,
@@ -18,6 +18,8 @@ import BillingChart from "../component/BillingChart";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSync} from "@fortawesome/free-solid-svg-icons";
 import {getCasePrice} from "../util/BillingUtils";
+
+const DropdownItem = Dropdown.item;
 
 class ControlPage extends React.Component {
 
