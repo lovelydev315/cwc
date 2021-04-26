@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import {
     Button, Card,
-    Col, DropdownButton, DropdownItem,
+    Col, DropdownButton, Dropdown,
     OverlayTrigger, Tooltip,
     Form,
     FormGroup, FormLabel, InputGroup,
     Modal, ProgressBar, Tab,
-    Table, Tabs, Dropdown,
+    Table, Tabs,
 } from "react-bootstrap";
 import CreatableSelect from "react-select/creatable";
 import autoBind from 'react-autobind';
@@ -35,6 +35,8 @@ import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo
 import { FormJSONTextArea, jsonValidator } from '../component/kendo-form-component';
 import ConvertDateToLocal from '../util/DateUtils';
 import {awsBuildMeshSignedUrl, awsBuildSignedUrl} from "../util/AwsUtils";
+
+const DropdownItem = Dropdown.Item;
 
 const trStyle = {
     backgroundColor: 'transparent'

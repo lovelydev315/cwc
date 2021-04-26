@@ -10,6 +10,7 @@ import RegisterPage from "./page/RegisterPage";
 import history from "./history"
 import PrivateRoute from "./container/PrivateRoute"
 import SignUpSuccess from './page/SignUpSuccess';
+import './style/default.css';
 
 class App extends React.Component {
 

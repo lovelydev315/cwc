@@ -168,3 +168,6 @@ body, input, select, textarea {
     vertical-align: middle;
 }
 
+.ReactChart svg {
+  overflow: overlay !important;
+}

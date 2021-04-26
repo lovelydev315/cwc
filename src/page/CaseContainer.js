@@ -8,7 +8,6 @@ import {
     Button,
     Popover,
     Dropdown,
-    DropdownItem,
     DropdownButton,
     OverlayTrigger,
     Tooltip,
@@ -42,6 +41,8 @@ import {visualizeFlow360Case} from "../component/visualizeCase-21.1.1";
 import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo} from '@progress/kendo-react-form';
 import { FormJSONTextArea, jsonValidator } from "../component/kendo-form-component";
 import ConvertDateToLocal from '../util/DateUtils';
+
+const DropdownItem = Dropdown.Item;
 
 const trStyle = {
     backgroundColor: 'transparent'
@@ -443,7 +444,6 @@ class CaseContainer extends React.Component {
                     </Modal.Footer>
                 </Modal>
             </Card>
-
         );
     }
     handleCaseRuntimeParamsChange(e) {

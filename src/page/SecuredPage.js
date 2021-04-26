@@ -9,12 +9,14 @@ import {ControlRoute} from "../container/PrivateRoute";
 import {actionCreators as authReducer} from "../reducer/AuthReducer";
 import {actionCreators as caseReducer} from "../reducer/CaseReducer";
 import {actionCreators as meshReducer} from "../reducer/MeshReducer";
-import {DropdownButton, DropdownItem, Nav, Navbar} from "react-bootstrap";
+import {DropdownButton, Dropdown, Nav, Navbar} from "react-bootstrap";
 import MeshFactoryContainer from "./StudioContainer";
 import logoDark from '../style/assets/images/logo.svg';
 import autoBind from "react-autobind";
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux";
+
+const DropdownItem = Dropdown.Item;
 
 class WorkspacePage extends React.Component {
     constructor(props, context) {

@@ -266,7 +266,7 @@ export default class ForcesBox extends React.Component {
             (<div><div id={`forces-${this.props.id}-reading`}></div>
              <div id={`forces-${this.props.id}`}></div></div>) :
             (<div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Loading...</span>
+              <span className="sr-only">Loading...</span>
              </div></div>)
         }
         </div>
