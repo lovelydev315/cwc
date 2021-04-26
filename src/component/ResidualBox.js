@@ -80,6 +80,7 @@ export default class ResidualBox extends React.Component{
             width = get_residual_body.width;
             height = get_residual_body.height;
         }
+        console.log(get_residual_body)
 
     }
     render() {
