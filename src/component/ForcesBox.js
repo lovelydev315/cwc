@@ -128,28 +128,28 @@ export default class ForcesBox extends React.Component {
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
         var div = d3.select(`#forces-${this.props.id}`).append("div")
-            .css("width", this.props.width)
-            .css("height", this.props.height)
-            .css("position", "relative");
+            .style("width", this.props.width)
+            .style("height", this.props.height)
+            .style("position", "relative");
         var valueDiv = div.append("div")
-            .css("position", "absolute")
-            .css("top", "40px")
-            .css("right", "270px")
-            .css("padding", "8px")
+            .style("position", "absolute")
+            .style("top", "40px")
+            .style("right", "270px")
+            .style("padding", "8px")
         Object.keys(colors).map((key, index) => {
             var innerValueDiv = valueDiv.append("div")
                 .attr("key", index)
-                .css("display", "flex")
-                .css("justify-content", "flex-start")
-                .css("align-items", "center")
+                .style("display", "flex")
+                .style("justify-content", "flex-start")
+                .style("align-items", "center")
             innerValueDiv.append("span")
-                .css("background", axisColors[colors[key]])
-                .css("width", "20px")
-                .css("height", "5px")
-                .css("margin-right", "10px");
+                .style("background", axisColors[colors[key]])
+                .style("width", "20px")
+                .style("height", "5px")
+                .style("margin-right", "10px");
             innerValueDiv.append("p")
-                .css("margin", 0)
-                .css("font-weight", "bold")
+                .style("margin", 0)
+                .style("font-weight", "bold")
                 .text(key)
 
         })
