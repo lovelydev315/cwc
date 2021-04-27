@@ -43,6 +43,7 @@ export default class ForcesBox extends React.Component {
         let forces = [];
         const get_total_forces_body = this.props.data;
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
+        d3.select(`#forces-${this.props.id}`).selectAll("div").remove();
         $(`#forces-${this.props.id}-reading`).empty();
         if(get_total_forces_body) {
             let avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
