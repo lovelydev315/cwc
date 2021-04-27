@@ -129,8 +129,8 @@ export default class ForcesBox extends React.Component {
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
         var div = d3.select(`#forces-${this.props.id}`).append("div")
-            .attr("width", this.props.width)
-            .attr("height", this.props.height)
+            .style("width", this.props.width+"px")
+            .style("height", this.props.height+"px")
             .style("position", "relative");
         var valueDiv = div.append("div")
             .style("position", "absolute")
