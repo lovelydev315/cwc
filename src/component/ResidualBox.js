@@ -5,10 +5,7 @@ import { Chart } from "react-charts"
 
 let data = [];
 
-const axes = [
-  { primary: true, type: 'linear', position: 'bottom' },
-  { type: 'log', position: 'left', max: 1, hardMax: 1 }
-]
+let axes;
 const series = {
   showPoints: false,
 }
@@ -75,22 +72,26 @@ export default class ResidualBox extends React.Component{
                 }
                 data.push(eachData);
             }
+            axes = [
+              { primary: true, type: 'linear', position: 'bottom', hardMax: data[0].data.length - 1 },
+              { type: 'log', position: 'left', hardMax: 1, hardMin: 1e-12 }
+            ]
         }
 
     }
     render() {
-        return <div style={{ width: this.props.width, height: this.props.height, position: "relative", margin: "10px auto 30px 30px"}}>
+        return <div style={{ width: this.props.width, height: this.props.height, position: "relative", margin: "10px auto 40px 40px"}}>
             {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "30px", right: "20px", padding: "8px"}}>
                 {Object.keys(colorsWithNames).map((key, index) => <div key={index} style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
             </div> : <div></div>}
             {data.length ? <>
-                <div style={{position: "absolute", top: 0, left: "-20px", height: "100%", display: "flex", alignItems: "center"}}>
+                <div style={{position: "absolute", top: 0, left: "-40px", height: "100%", display: "flex", alignItems: "center"}}>
                     <p style={{writingMode: "vertical-lr", textOrientation: "upright", margin: 0}}>Resiual</p>
                 </div>
-                <div style={{position: "absolute", bottom: "-20px", left: 0, width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <div style={{position: "absolute", bottom: "-40px", left: 0, width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
                     <p style={{margin: 0}}>steps</p>
                 </div>
-                <Chart data={data} axes={axes} series={series} />
+                <Chart data={data} axes={axes} series={series}/>
             </> : <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div className="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
              </div></div>

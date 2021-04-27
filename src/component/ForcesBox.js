@@ -2,16 +2,6 @@ import React from "react";
 import * as d3 from "d3";
 import $ from 'jquery';
 
-let avg_CL = [];
-let avg_CD = []; 
-let avg_CFx = [];
-let avg_CFy = [];
-let avg_CFz = [];
-let avg_CMx = [];
-let avg_CMy = [];
-let avg_CMz = [];
-let forces = [];
-
 export default class ForcesBox extends React.Component {
 
     componentDidMount() {
@@ -50,18 +40,19 @@ export default class ForcesBox extends React.Component {
     }
 
     drawChart() {
+        let forces = [];
         const get_total_forces_body = this.props.data;
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
         $(`#forces-${this.props.id}-reading`).empty();
         if(get_total_forces_body) {
-            avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
-            avg_CD = this.get_average_forces(get_total_forces_body["CD"]);
-            avg_CFx = this.get_average_forces(get_total_forces_body["CFx"]);
-            avg_CFy = this.get_average_forces(get_total_forces_body["CFy"]);
-            avg_CFz = this.get_average_forces(get_total_forces_body["CFz"]);
-            avg_CMx = this.get_average_forces(get_total_forces_body["CMx"]);
-            avg_CMy = this.get_average_forces(get_total_forces_body["CMy"]);
-            avg_CMz = this.get_average_forces(get_total_forces_body["CMz"]);
+            let avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
+            let avg_CD = this.get_average_forces(get_total_forces_body["CD"]);
+            let avg_CFx = this.get_average_forces(get_total_forces_body["CFx"]);
+            let avg_CFy = this.get_average_forces(get_total_forces_body["CFy"]);
+            let avg_CFz = this.get_average_forces(get_total_forces_body["CFz"]);
+            let avg_CMx = this.get_average_forces(get_total_forces_body["CMx"]);
+            let avg_CMy = this.get_average_forces(get_total_forces_body["CMy"]);
+            let avg_CMz = this.get_average_forces(get_total_forces_body["CMz"]);
             for (let i = 0; i < get_total_forces_body.steps.length; ++i) {
                 forces.push({
                     "steps": get_total_forces_body["steps"][i],
@@ -83,6 +74,16 @@ export default class ForcesBox extends React.Component {
                     "CMz_avg": avg_CMz[i],
                 });
             }
+            $(`#forces-${this.props.id}-reading`).append(
+              '<table  style="width:600px;" ><tr><th>CL: </th><th>' + this.expo(avg_CL[avg_CL.length-1],4) +'</th><th>' +
+              'CD: </th><th>' + this.expo(avg_CD[avg_CD.length-1], 4) + '</th><th></th></tr><tr><th>' +
+              'CFx:</th><th>' + this.expo(avg_CFx[avg_CFx.length-1],4)+ '</th><th>' +
+              'CFy:</th><th>' + this.expo(avg_CFy[avg_CFy.length-1], 4)+ '</th><th>' +
+              'CFz:</th><th>' + this.expo(avg_CFz[avg_CFz.length-1], 4)+ '</th></tr><tr><th>' +
+              'CMx:</th><th>' + this.expo(avg_CMx[avg_CMx.length-1],4) + '</th><th>' +
+              'CMy:</th><th>' + this.expo(avg_CMy[avg_CMy.length-1], 4)+ '</th><th>' +
+              'CMz:</th><th>' + this.expo(avg_CMz[avg_CMz.length-1], 4) + '</th></tr></table>'
+            );
 
             this.drawForces(forces,{
                 'CL' : 'blue',
@@ -126,7 +127,33 @@ export default class ForcesBox extends React.Component {
         // append the svg obgect to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg = d3.select(`#forces-${this.props.id}`).append("svg")
+        var div = d3.select(`#forces-${this.props.id}`).append("div")
+            .css("width", this.props.width)
+            .css("height", this.props.height)
+            .css("position", "relative");
+        var valueDiv = div.append("div")
+            .css("position", "absolute")
+            .css("top", "40px")
+            .css("right", "270px")
+            .css("padding", "8px")
+        Object.keys(colors).map((key, index) => {
+            var innerValueDiv = valueDiv.append("div")
+                .attr("key", index)
+                .css("display", "flex")
+                .css("justify-content", "flex-start")
+                .css("align-items", "center")
+            innerValueDiv.append("span")
+                .css("background", axisColors[colors[key]])
+                .css("width", "20px")
+                .css("height", "5px")
+                .css("margin-right", "10px");
+            innerValueDiv.append("p")
+                .css("margin", 0)
+                .css("font-weight", "bold")
+                .text(key)
+
+        })
+        var svg = div.append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g").attr("transform",
@@ -260,47 +287,13 @@ export default class ForcesBox extends React.Component {
             )
     }
     render() {
-        console.log(forces);
-        console.log(avg_CL);
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
-            <div>
-                <div id={`forces-${this.props.id}-reading`}>
-                      <table  style="width:600px;">
-                        <tbody>
-                            <tr>
-                                <th>CL: </th>
-                                <th>{this.expo(avg_CL[avg_CL.length-1],4)}</th>
-                                <th>CD: </th>
-                                <th>{this.expo(avg_CD[avg_CD.length-1], 4)}</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <th>CFx:</th>
-                                <th>{this.expo(avg_CFx[avg_CFx.length-1],4)}</th>
-                                <th>CFy:</th>
-                                <th>{this.expo(avg_CFy[avg_CFy.length-1], 4)}</th>
-                                <th>CFz:</th>
-                                <th>{this.expo(avg_CFz[avg_CFz.length-1], 4)}</th>
-                            </tr>
-                            <tr>
-                                <th>CMx:</th>
-                                <th>{this.expo(avg_CMx[avg_CMx.length-1],4)}</th>
-                                <th>CMy:</th>
-                                <th>{this.expo(avg_CMy[avg_CMy.length-1], 4)}</th>
-                                <th>CMz:</th>
-                                <th>{this.expo(avg_CMz[avg_CMz.length-1], 4)}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id={`forces-${this.props.id}`}></div>
-            </div> :
-            <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}>
-                <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-            </div>
+            <div><div id={`forces-${this.props.id}-reading`}></div>
+             <div id={`forces-${this.props.id}`}></div></div> :
+            <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+             </div></div>
         }
         </div>
     }
