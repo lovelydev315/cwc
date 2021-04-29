@@ -205,7 +205,8 @@ export default class ForcesBox extends React.Component {
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
             .attr("class", 'axis')
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x)
+                .ticks(10));
 
         svg.append("text")
             .attr("y", height+40)
@@ -261,14 +262,14 @@ export default class ForcesBox extends React.Component {
         // gridlines in x axis function
         function make_x_gridlines() {
             return d3.axisBottom(x)
-                .ticks(5)
+                .ticks(10)
         }
 
         // gridlines in y axis function
         function make_y_gridlines() {
             for (var k in colors)
                 return d3.axisLeft(y[k])
-                    .ticks(5)
+                    .ticks(10)
         }
 
         svg.append("g")
