@@ -41,6 +41,7 @@ import {visualizeFlow360Case} from "../component/visualizeCase-21.1.1";
 import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo} from '@progress/kendo-react-form';
 import { FormJSONTextArea, jsonValidator } from "../component/kendo-form-component";
 import ConvertDateToLocal from '../util/DateUtils';
+import Humanize from "humanize-plus";
 
 const DropdownItem = Dropdown.Item;
 
@@ -253,6 +254,7 @@ class CaseContainer extends React.Component {
                                 <th>Start Time</th>
                                 <th>Finish Time</th>
                                 <th>Status</th>
+                                <th>Work</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -475,7 +477,7 @@ class CaseContainer extends React.Component {
             })
           }
           else {
-            let a = document.createElement('a');
+            const a = document.createElement('a');
             a.href = signedUrl;
             a.click();
           }
