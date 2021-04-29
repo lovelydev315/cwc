@@ -83,30 +83,25 @@ export function awsBuildMeshSignedUrl(meshId, filepath, onCallback) {
         });
 }
 
-export function awsBuildSignedUrl(caseId, filepath, onCallback) {
+export async function awsBuildSignedUrl(caseId, filepath) {
     let user = getS3User();
     const webapiEndpoint= config.webapiV2.URL;
-
-    return fetch(`${webapiEndpoint}/case/${caseId}/signedUrl?filepath=${filepath}`, {
-        method: "get",
-        headers:{
-            "AUTHORIZATION": "Bearer " + user.accessToken,
-            "FLOW360USER": user.identityId,
-            "FLOW360ACCESSUSER":user.guestUserIdentity
-        }
-    }).then(response => response.json())
-      .then(data => {
-          if(data) {
-              onCallback(data.data)
-          }
-          else {
-              onCallback()
-          }
-
-      })
-      .catch(()=> {
-          onCallback();
-      });
+    try {
+        const response = await fetch(`${webapiEndpoint}/case/${caseId}/signedUrl?filepath=${filepath}`, {
+            method: "get",
+            headers:{
+                "AUTHORIZATION": "Bearer " + user.accessToken,
+                "FLOW360USER": user.identityId,
+                "FLOW360ACCESSUSER":user.guestUserIdentity
+            }
+        });
+        const data = await response.json();
+        if(data) return data.data;
+        else return;
+    } catch(err) {
+        console.log(err);
+        return;
+    }
 }
 
 export function awsUploadFile(bucket, path, file, onProgressCallback, onCompleteCallback) {
