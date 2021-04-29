@@ -290,8 +290,9 @@ export default class ForcesBox extends React.Component {
     render() {
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
-            <div><div id={`forces-${this.props.id}-reading`}></div>
-             <div id={`forces-${this.props.id}`}></div></div> :
+            <div><div id={"forces-"+this.props.id+"-reading"}></div>
+             <div id={"forces-"+this.props.id}></div></div> : <div />}
+        {this.props.data && this.props.data.steps && this.props.data.steps.length ? <div /> :
             <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
              </div></div>

@@ -73,14 +73,16 @@ export default class ResidualBox extends React.Component{
                 data.push(eachData);
             }
             axes = [
-              { primary: true, type: 'linear', position: 'bottom', hardMax: data[0].data.length - 1 },
-              { type: 'log', position: 'left', hardMax: 1, hardMin: 1e-12 }
+              { primary: true, type: 'linear', position: 'bottom', tickCount: 10, hardMin: data[0].data[0][0], hardMax: data[0].data[data[0].data.length - 1][0] },
+              { type: 'log', position: 'left', hardMax: 1, tickCount: 12, hardMin: 1e-12 }
             ]
         }
 
     }
     render() {
-        return <div style={{ width: this.props.width, height: this.props.height, position: "relative", margin: "10px auto 40px 40px"}}>
+        console.log(data);
+        console.log(data.length && data[0].data[data[0].data.length - 1][0]);
+        return <div style={{ width: this.props.width, height: this.props.height, position: "relative", margin: "10px auto 50px 50px"}}>
             {Object.keys(colorsWithNames).length ? <div style={{position: "absolute", top: "30px", right: "20px", padding: "8px"}}>
                 {Object.keys(colorsWithNames).map((key, index) => <div key={index} style={{display: "flex", justifyContent: "flex-start", alignItems: "center"}}><span style={{backgroundColor: colorsWithNames[key], width: "20px", height: "5px", marginRight: "10px"}}></span><p className="m-0 font-weight-bold">{key}</p></div>)}
             </div> : <div></div>}
