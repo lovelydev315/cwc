@@ -318,7 +318,7 @@ class CaseContainer extends React.Component {
                                                     <Dropdown.Menu>
                                                       {
                                                         downloadFiles.map((item, index) => {
-                                                          return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value, caseItem.caseName, caseItem.forceDownload)}>{item.name}</DropdownItem>
+                                                          return <DropdownItem key={index} onClick={(e) => this.openDownload(e, caseItem.caseId, item.value, item.forceDownload)}>{item.name}</DropdownItem>
                                                         })
                                                       }
                                                     </Dropdown.Menu>
@@ -456,9 +456,7 @@ class CaseContainer extends React.Component {
     openDownload(e, case_id, filename, forceDownload) {
       e.stopPropagation();
       awsBuildSignedUrl(case_id, filename, (signedUrl) => {
-        console.log(signedUrl)
         if (signedUrl) {
-          console.log(forceDownload)
           if(forceDownload) {
             axios.get(signedUrl).then((response) => {
               if(response.data) {
@@ -480,10 +478,20 @@ class CaseContainer extends React.Component {
             let a = document.createElement('a');
             a.href = signedUrl;
             a.click();
-            console.log("download", signedUrl)
           }
         } else {
-          alert(`${filename} not found.`);
+          if(filename.indexOf("volumes.tar.gz") !== -1) {
+            filename = "results/vtu.tar.gz";
+            this.openDownload(e, case_id, filename, forceDownload);
+          }
+          else {
+            if(filename.indexOf("vtu.tar.gz") !== -1) {
+              alert(`results.volumes.tar.gz or ${filename} not found.`);
+            }
+            else {
+              alert(`${filename} not found.`);
+            }
+          }
         }
       });
     }
