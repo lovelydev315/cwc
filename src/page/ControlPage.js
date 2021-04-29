@@ -6,10 +6,10 @@ import autoBind from 'react-autobind';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CreatableSelect from "react-select/creatable";
-import {buildBillingChartData, generateBilling, generateBillingNew} from "./Shared";
+import {buildBillingChartData, generateBillingNew} from "./Shared";
 import {
     Badge,
-    Button, Card, DropdownButton, Dropdown,
+    Button, Card, DropdownButton, DropdownItem,
     FormGroup, FormLabel, InputGroup,
     Row, Tab,
     Table, Tabs,
@@ -17,9 +17,6 @@ import {
 import BillingChart from "../component/BillingChart";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSync} from "@fortawesome/free-solid-svg-icons";
-import {getCasePrice} from "../util/BillingUtils";
-
-const DropdownItem = Dropdown.item;
 
 class ControlPage extends React.Component {
 
@@ -244,9 +241,9 @@ class ControlPage extends React.Component {
             <Card.Body>
                 <Tabs defaultActiveKey={1}>
                     <Tab eventKey={1} title='Daemon Status'>
-                        <h1><Badge variant="primary">Update Daemon Status</Badge></h1>
+                        <h1 style={{marginTop:30}}>Update Daemon Status</h1>
                         <FormGroup controlId="formBasicText">
-                            <Table striped bordered condensed hover>
+                            <Table striped bordered  hover>
                                 <thead>
                                 <tr>
                                     <th>Worker Group</th>
@@ -288,9 +285,9 @@ class ControlPage extends React.Component {
                         </FormGroup>
                     </Tab>
                     <Tab eventKey={2} title='External Hosts'>
-                        <h1><Badge variant="primary">External Hosts List</Badge></h1>
+                        <h1 style={{marginTop:30}}>External Hosts List</h1>
                         <FormGroup controlId="formBasicText">
-                            <Table striped bordered condensed hover>
+                            <Table striped bordered  hover>
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -328,9 +325,9 @@ class ControlPage extends React.Component {
                         </FormGroup>
                     </Tab>
                     <Tab eventKey={3} title='Pending Mesh'>
-                        <h1><Badge variant="primary">Pending Mesh List</Badge></h1>
+                        <h1 style={{marginTop:30}}>Pending Mesh List</h1>
                         <FormGroup controlId="formBasicText">
-                            <Table striped bordered condensed hover>
+                            <Table striped bordered condensed={'true'} hover>
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -366,9 +363,9 @@ class ControlPage extends React.Component {
                         </FormGroup>
                     </Tab>
                     <Tab eventKey={4} title='Pending Cases'>
-                        <h1><Badge variant="primary">Pending Case List</Badge></h1>
+                        <h1 style={{marginTop:30}}>Pending Case List</h1>
                         <FormGroup controlId="formBasicText">
-                            <Table striped bordered condensed hover>
+                            <Table striped bordered condensed={'true'} hover>
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -410,9 +407,9 @@ class ControlPage extends React.Component {
 
                     </Tab>
                     <Tab eventKey={5} title='Recent Cases'>
-                        <h1><Badge variant="primary">Past Completed/Failed Case List (48 hours)</Badge></h1>
+                        <h1 style={{marginTop:30}}>Past Completed/Failed Case List (48 hours)</h1>
                         <FormGroup controlId="formBasicText">
-                            <Table striped bordered condensed hover>
+                            <Table striped bordered condensed={'true'} hover>
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -454,42 +451,54 @@ class ControlPage extends React.Component {
 
                     </Tab>
                     <Tab eventKey={6} title='Billing'>
-                        <h1><Badge variant="primary">Show Billing Info</Badge></h1>
-                        <FormGroup controlId="formBasicText" bsClass='drop_down_users'>
-                            {userList &&
+                        <h1 style={{marginTop:30}}>Show Billing Info</h1>
+                        {userList &&
 
-                            <CreatableSelect
-                                isClearable
-                                placeholder="Select user to show billing (accountId/email/limit/login_times/invite_code)"
-                                value={selectedUserId}
-                                onChange={this.handleUserChange}
-                                options={userList}
-                            /> }
-                            <Row style={{marginLeft:30}}>
-                                <label style={{marginRight:20}}>Select Start Month: </label>
+                        <CreatableSelect
+                            isClearable
+                            placeholder="Select user to show billing (accountId/email/limit/login_times/invite_code)"
+                            value={selectedUserId}
+                            onChange={this.handleUserChange}
+                            options={userList}
+                        /> }
+
+                        <InputGroup className="flex align-items-center">
+
+                            <InputGroup.Append className="align-items-center">
+                                <InputGroup.Text id="basic-addon1" style={{marginLeft:60, marginRight:20}}>Select Start Month: </InputGroup.Text>
+                            </InputGroup.Append>
+                            <InputGroup.Append className="align-items-center">
                                 <DatePicker
                                     selected={startBillMonth}
                                     onChange={this.handleStartBillMonthChange}
                                     dateFormat="yyyy.MM"
                                     showMonthYearPicker placeholderText="select start month"/>
-                                <label style={{marginRight:20}}>Select End Month: </label>
+                            </InputGroup.Append>
+                            <InputGroup.Append className="align-items-center">
+                                <InputGroup.Text id="basic-addon1" style={{marginLeft:60, marginRight:20}}>Select End Month: </InputGroup.Text>
+                            </InputGroup.Append>
+                            <InputGroup.Append className="align-items-center">
                                 <DatePicker
                                     selected={endBillMonth}
                                     onChange={this.handleEndBillMonthChange}
                                     dateFormat="yyyy.MM"
                                     showMonthYearPicker placeholderText="select end month"/>
-                                <Button variant="light" onClick={() => this.onClickBillingInfo()}>Fetch</Button>
-                            </Row>
-                        </FormGroup>
-                        {caseListResult && this.state.selectedUserId && <BillingChart data={buildBillingChartData(caseListResult)}/>}
-
+                            </InputGroup.Append>
+                            <InputGroup.Append className="align-items-center">
+                                <Button style={{marginLeft:20}} onClick={() => this.onClickBillingInfo()}>Fetch</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                        <div className="d-flex justify-content-center" style={{marginTop:20}}>
+                        {caseListResult && this.state.selectedUserId &&
+                        <BillingChart data={buildBillingChartData(caseListResult)}/>}
+                        </div>
                         {caseListResult  && this.state.selectedUserId &&
                         generateBillingNew(caseListResult, this.state.selectedUserId.value)
                         }
 
                     </Tab>
                     <Tab eventKey={7} title='Spend Limit'>
-                        <h1><Badge variant="primary">Update Monthly Spend Limit</Badge></h1>
+                        <h1 style={{marginTop:30}}><Badge variant="primary">Update Monthly Spend Limit</Badge></h1>
                         <FormGroup controlId="formBasicText" bsClass='drop_down_users'>
                             {userList &&
 

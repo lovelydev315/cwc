@@ -43,6 +43,7 @@ export default class ForcesBox extends React.Component {
         let forces = [];
         const get_total_forces_body = this.props.data;
         d3.select(`#forces-${this.props.id}`).selectAll("svg").remove();
+        d3.select(`#forces-${this.props.id}`).selectAll("div").remove();
         $(`#forces-${this.props.id}-reading`).empty();
         if(get_total_forces_body) {
             let avg_CL = this.get_average_forces(get_total_forces_body["CL"]);
@@ -127,7 +128,33 @@ export default class ForcesBox extends React.Component {
         // append the svg obgect to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg = d3.select(`#forces-${this.props.id}`).append("svg")
+        var div = d3.select(`#forces-${this.props.id}`).append("div")
+            .style("width", this.props.width+"px")
+            .style("height", this.props.height+"px")
+            .style("position", "relative");
+        var valueDiv = div.append("div")
+            .style("position", "absolute")
+            .style("top", "40px")
+            .style("right", "290px")
+            .style("padding", "8px")
+        Object.keys(colors).map((key, index) => {
+            var innerValueDiv = valueDiv.append("div")
+                .attr("key", index)
+                .style("display", "flex")
+                .style("justify-content", "flex-start")
+                .style("align-items", "center")
+            innerValueDiv.append("span")
+                .style("background", axisColors[colors[key]])
+                .style("width", "20px")
+                .style("height", "5px")
+                .style("margin-right", "10px");
+            innerValueDiv.append("p")
+                .style("margin", 0)
+                .style("font-weight", "bold")
+                .text(key)
+
+        })
+        var svg = div.append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g").attr("transform",
@@ -263,11 +290,11 @@ export default class ForcesBox extends React.Component {
     render() {
         return <div ><div id="force_box">Latest forces averaged over last 10% steps:</div>
         {this.props.data && this.props.data.steps && this.props.data.steps.length ? 
-            (<div><div id={`forces-${this.props.id}-reading`}></div>
-             <div id={`forces-${this.props.id}`}></div></div>) :
-            (<div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Loading...</span>
-             </div></div>)
+            <div><div id={`forces-${this.props.id}-reading`}></div>
+             <div id={`forces-${this.props.id}`}></div></div> :
+            <div style={{width: "100%", display: "flex", justifyContent: "center", margin: "20px"}}><div class="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+             </div></div>
         }
         </div>
     }

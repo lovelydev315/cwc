@@ -6,8 +6,15 @@ import {connect} from "react-redux";
 import {actionCreators} from "../reducer/CaseReducer";
 import "../style/default.css"
 import {buildBillingChartData, generateBillingNew} from "./Shared";
-import {getOrgId, getS3User, getS3UserId} from '../reducer/utils';
-import {Button, Card, Row, Table} from "react-bootstrap";
+import {getOrgId, getS3User} from '../reducer/utils';
+import {
+    Button,
+    Card,
+    InputGroup,
+    Row,
+    Table,
+    Tooltip
+} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import BillingChart from "../component/BillingChart";
@@ -33,81 +40,54 @@ class BillingContainer extends React.Component {
     }
 
     render() {
-        let {caseListResult, organizeDetail} = this.props;
-        const {startBillMonth, endBillMonth, isEditing} = this.state;
+        let {caseListResult} = this.props;
+        const {startBillMonth, endBillMonth} = this.state;
 
-        let userId = getS3UserId();
         let user = getS3User();
-        //console.log("caseListResult", caseListResult);
-        let orgDetail = organizeDetail;
         return (
             <Card>
-                <Card.Header>Flow360 Billing Summary
-
-                    <i className="margin10">
-                    </i>
-                </Card.Header>
+                <Card.Header>Flow360 Billing Summary</Card.Header>
                 <div>
-                    {orgDetail && <div>
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Organization: </label>{orgDetail.name}
-                    </Row>
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Service Level: </label>{orgDetail.serviceLevel}
-                    </Row>
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Last Payment Date: </label>{orgDetail.lastPaymentDate}
-                    </Row>
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Reminder Email Threshold: </label>
-                        <input
-                            type="text"
-                            name="reminderEmailThreshold"
-                            placeholder="Reminder Email Threshold..."
-                            value={orgDetail.reminderEmailThreshold}
-                            onChange={e => {
-                                organizeDetail.reminderEmailThreshold = parseInt(e.target.value);
-                                this.setState({...this.state, organizeDetail:organizeDetail});
-                            }}
-                        />
-                        {false && <button onClick={(e) => this.updateReminderOfEmailThreshold()}>update</button>}
-                    </Row>
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Require Approval Threshold: </label>
 
-                            <input
-                                type="text"
-                                name="approvalThreshold"
-                                placeholder="Require Approval Threshold..."
-                                value={orgDetail.requriedApprovalThreshold}
-                                onChange={e => {
-                                    organizeDetail.requriedApprovalThreshold = parseInt(e.target.value);
-                                    this.setState({...this.state, organizeDetail:organizeDetail});
-                                }}
-                            />
-                        {false && <button onClick={(e) => this.updateApprovalThreshold()}>update</button>}
-                    </Row>
+                    <InputGroup className="flex align-items-center">
+                        <InputGroup.Prepend className="align-items-center">
+                            <InputGroup.Text id="basic-addon1" style={{marginLeft:60, marginRight:20}}>Select Start Month: </InputGroup.Text>
+                        </InputGroup.Prepend>
 
-                    </div>}
-                    <Row style={{marginLeft:30}}>
-                        <label style={{marginRight:20}}>Select Start Month: </label>
-                        <DatePicker
-                            selected={startBillMonth}
-                            onChange={this.handleStartBillMonthChange}
-                            dateFormat="yyyy.MM"
-                            showMonthYearPicker placeholderText="select start month"/>
-                        <label style={{marginRight:20}}>Select End Month: </label>
-                        <DatePicker
-                            selected={endBillMonth}
-                            onChange={this.handleEndBillMonthChange}
-                            dateFormat="yyyy.MM"
-                            showMonthYearPicker placeholderText="select end month"/>
-                        <Button variant="light" onClick={this.handleFetchBill}>Fetch</Button>
-                    </Row>
-                    {caseListResult && <BillingChart data={buildBillingChartData(caseListResult)}/>}
+                        <InputGroup.Append>
+                            <DatePicker selected={startBillMonth}
+                                        onChange={this.handleStartBillMonthChange}
+                                        dateFormat="yyyy.MM"
+                                        showMonthYearPicker placeholderText="select start month">
+                            </DatePicker>
+                            {/*<InputGroup.DatePicker selected={startBillMonth}*/}
+                            {/*                       onChange={this.handleStartBillMonthChange}*/}
+                            {/*                       dateFormat="yyyy.MM"*/}
+                            {/*                       showMonthYearPicker placeholderText="select start month">*/}
+                            {/*</InputGroup.DatePicker>*/}
+
+                        </InputGroup.Append>
+                        <InputGroup.Prepend className="align-items-center">
+                            <InputGroup.Text id="basic-addon1" style={{marginLeft:60, marginRight:20}}>Select End Month: </InputGroup.Text>
+                        </InputGroup.Prepend>
+
+                        <InputGroup.Append>
+                            <DatePicker
+                                selected={endBillMonth}
+                                onChange={this.handleEndBillMonthChange}
+                                dateFormat="yyyy.MM"
+                                showMonthYearPicker placeholderText="select end month"/>
+                        </InputGroup.Append>
+                        <InputGroup.Append>
+                            <Button onClick={this.handleFetchBill} style={{marginLeft:30}}>Submit</Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                    <div className="d-flex justify-content-center" style={{marginTop:20}}>
+                        {caseListResult && <BillingChart  data={buildBillingChartData(caseListResult)}/>}
+                    </div>
                     {caseListResult &&
-                     generateBillingNew(caseListResult, userId)}
-                <Table striped bordered condensed hover size="sm" style={{visibility:'hidden'}} >
+                     generateBillingNew(caseListResult, user && user.email)}
+                <Table striped bordered hover size="sm" style={{visibility:'hidden'}} >
                     <thead>
                     <tr>
                         <th></th>
@@ -117,8 +97,6 @@ class BillingContainer extends React.Component {
                         <th>Submit Time</th>
                         <th>Finish Time</th>
                         <th>Mesh Size</th>
-                        <th>Nodes</th>
-                        <th>Priority</th>
                     </tr>
                     </thead>
                 </Table>

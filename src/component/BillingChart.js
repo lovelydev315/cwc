@@ -25,20 +25,15 @@ export default class BillingChart extends React.Component {
         //     { name: '2020.6', case_cost: 2000, s3_cost: 2013},
         // ];
         const {data} = this.props;
-        //console.log(data)
-        let caseLowSeries = {
-            label: 'Case Database',
-            datums: data.map((v,i) => ({x: v.name, y: v.database}))
-        }
-        let caseHighSeries = {
-            label: 'Case Design',
-            datums: data.map((v,i) => ({x: v.name, y: v.design}))
+        let caseComputeCost = {
+            label: 'Compute Work',
+            datums: data.map((v,i) => ({x: v.name, y: v.work}))
         }
 
+
         const chartData = [
-            caseLowSeries,
-            caseHighSeries
-        ]
+            caseComputeCost
+        ];
         const series = {
                 type: 'bar',
             }

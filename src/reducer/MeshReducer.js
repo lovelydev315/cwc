@@ -6,6 +6,7 @@ import createAction, {
 } from "./utils"
 import {config} from "../util/EnvConfig";
 import {awsUploadFile} from "../util/AwsUtils";
+import {getMeshName} from "../util/FileUtils";
 
 const GET_MESH = "GET_MESH";
 const GET_VERSIONS = "GET_VERSIONS";
@@ -116,11 +117,7 @@ export const actionCreators = {
                 let prev_perc = 0;
                 actionCreators.listMeshs()(dispatch, state);
                 let mesh = resp.data.data;
-                let s3Path = `users/${getS3UserId()}/${mesh.meshId}/${getMeshName(body.meshFormat, body.meshEndianness, body.meshName)}`;
-                let meshCompression = body.meshCompression;
-                if(meshCompression !== 'None') {
-                    s3Path = s3Path + '.' + meshCompression;
-                }
+                let s3Path = `users/${getS3UserId()}/${mesh.meshId}/${getMeshName(body.meshFormat, body.meshEndianness, body.meshCompression, body.meshName)}`;
 
                 awsUploadFileToMesh(
                   s3Path,
@@ -196,19 +193,3 @@ function awsUploadFileToMesh(path, file, onProgressCallback, onCompleteCallback)
   awsUploadFile(config.s3.MESH_BUCKET, path, file, onProgressCallback, onCompleteCallback);
 }
 
-function getMeshName(format, endianness, filename) {
-    let meshName = "";
-    if ("aflr3" === format && endianness === "little") {
-        meshName = "mesh.lb8.ugrid";
-    } else if ("aflr3" === format && endianness === "big") {
-        meshName = "mesh.b8.ugrid";
-    } else {
-        meshName = filename;
-    }
-    if (filename.endsWith(".gz")) {
-        meshName = meshName + ".gz";
-    } else if (filename.endsWith("bz2")) {
-        meshName = meshName + ".bz2";
-    }
-    return meshName;
-}

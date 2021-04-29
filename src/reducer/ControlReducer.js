@@ -14,147 +14,52 @@ const LIST_DAEMONS = 'LIST_DAEMONS';
 
 export const actionCreators = {
     listHosts: () => (dispatch, state) => {
-      let body = {'operation': 'list_hosts'};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let hosts = resp.data;
-          //console.log('hosts: ' + hosts);
-          dispatch(createAction(LIST_HOSTS, hosts));
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-        })
+        let body = {'operation': 'list_hosts'};
     },
     listDaemons: () => (dispatch, state) => {
-      let body = {'operation': 'list_daemon_info'};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let daemons = resp.data;
-          daemons = daemons.map((val, index, array) => {
-            val.daemonKey = val.worker + '/' + val.host;
-            return val;
-          });
-          //console.log('xxx', daemons);
-          dispatch(createAction(LIST_DAEMONS, daemons));
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-        })
+        let body = {'operation': 'list_daemon_info'};
     },
     switchOnOffHosts: (selectedHostState) => (dispatch, state) => {
-      let body = {'operation': 'change_state', 'states': selectedHostState};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-            alert('Fail to change hosts state');
-        })
+        let body = {'operation': 'change_state', 'states': selectedHostState};
     },
     listPendingItems: () => (dispatch, state) => {
-      let body = {'operation': 'list_pending_meshes_and_cases'};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let meshCaseList = resp.data;
-          meshCaseList.case_list = meshCaseList.cases.uploaded.concat(meshCaseList.cases.processing);
-          meshCaseList.mesh_list = meshCaseList.meshes.uploaded.concat(meshCaseList.meshes.processing);
-          //console.log("pending", meshCaseList);
-          dispatch(createAction(GET_PENDING_ITEMS, meshCaseList));
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-        })
+        let body = {'operation': 'list_pending_meshes_and_cases'};
     },
     listPastItems: () => (dispatch, state) => {
-      let body = {'operation': 'list_past_cases'};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let caseList = resp.data;
-          let res = [];
-          res = res.concat(caseList.failed);
-          res = res.concat(caseList.completed);
-          res = res.concat(caseList.uploading);
-          //console.log("pending", res);
-          dispatch(createAction(GET_PAST_ITEMS, res));
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-        })
+        let body = {'operation': 'list_past_cases'};
     },
     updateDaemonInfo: (instruction) => (dispatch, state) => {
-      let body = instruction;
-      body['operation'] = 'update_daemon_info';
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let res = resp.data;
-          if (!res) {
-            alert('Fail to update daemon pause');
-          }
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-            alert('Fail to update daemon pause');
-        })
+        let body = instruction;
     },
     updateCase: (case_id, worker, user_id) => (dispatch, state) => {
-      let body = {'operation': 'lock_update_case', 'case_id': case_id,
-                  'worker': worker, 'user_id': user_id};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let res = resp.data;
-          if (!res) {
-            alert('Fail to update case worker');
-          }
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-        })
+        let body = {
+            'operation': 'lock_update_case', 'case_id': case_id,
+            'worker': worker, 'user_id': user_id
+        };
     },
     updateMesh: (mesh_id, worker, user_id) => (dispatch, state) => {
-      let body = {'operation': 'lock_update_mesh', 'mesh_id': mesh_id,
-                  'worker': worker, 'user_id': user_id};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let res = resp.data;
-          if (!res) {
-            alert('Fail to update mesh worker');
-          }
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-            alert('Fail to update mesh worker');
-        })
+        let body = {
+            'operation': 'lock_update_mesh', 'mesh_id': mesh_id,
+            'worker': worker, 'user_id': user_id
+        };
     },
-    updateMonthlyLimit: (user_id, limit) => (dispatch, state) => {
-      let body = {'operation': 'update_monthly_limit', 'user_id': user_id,
-                  'limit': limit};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let res = resp.data;
-          if (!res) {
-            alert('Fail to update monthly limit');
-          }
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-            alert('Fail to update monthly limit');
-        })
-    },
+
     fetchUsers: () => (dispatch, state) => {
-      let body = {'operation': 'list_users'};
-      return callPost("flow360-admin",  extra_param(), body)
-        .then(resp => {
-          let res = resp.data;
-          let options = res.map(function(x) {
-            return {value: x.user_id, label: x.user_id + '(' + x.email + '/' + x.monthlyLimit + '/' + x.login_times + '/' + x.invite_code  + ')'};
-          });
-          dispatch(createAction(POPULATE_USERS_LIST, options));
-        })
-        .catch(err => {
-            //console.log("admin.err", err);
-            alert('Fail to get users');
-        })
+        return callGet2WithToken("admin/users")
+            .then(resp => {
+                let res = resp.data.data.filter(v => v.appType != 'TIDY3D').sort((v1, v2) => v1.email.localeCompare(v2.email));
+                let options = res.map(function (x) {
+                    return {
+                        value: x.userId,
+                        label: x.userId + '(' + x.email + '/' + x.loginTimes + '/' + x.inviteCode + ')'
+                    };
+                });
+                dispatch(createAction(POPULATE_USERS_LIST, options));
+            })
+            .catch(err => {
+                console.log("admin.err", err);
+                alert('Fail to get users');
+            })
     },
     listCasesForBilling: (user_id, startBillingDate, endBillingDate) => (dispatch, state) => {
 

@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import {
     Button, Card,
-    Col, DropdownButton, Dropdown,
+    Col, DropdownButton, DropdownItem,
     OverlayTrigger, Tooltip,
     Form,
     FormGroup, FormLabel, InputGroup,
     Modal, ProgressBar, Tab,
-    Table, Tabs,
+    Table, Tabs, Dropdown,
 } from "react-bootstrap";
 import CreatableSelect from "react-select/creatable";
 import autoBind from 'react-autobind';
@@ -35,8 +35,6 @@ import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo
 import { FormJSONTextArea, jsonValidator } from '../component/kendo-form-component';
 import ConvertDateToLocal from '../util/DateUtils';
 import {awsBuildMeshSignedUrl, awsBuildSignedUrl} from "../util/AwsUtils";
-
-const DropdownItem = Dropdown.item;
 
 const trStyle = {
     backgroundColor: 'transparent'
@@ -340,12 +338,6 @@ class MeshContainer extends React.Component {
                 </Card.Header>
                 <Card.Body>
                     <FormGroup controlId="formBasicText">
-                        {/* <div className="upload_mesh">
-                          <DropdownButton variant="secondary" id="more_action_checkbox" title="Actions">
-                            <DropdownItem onClick={this.handleDeleteFromCheckbox}>Delete</DropdownItem>
-                          </DropdownButton>
-                        </div>
-                        <div className="upload_mesh"><Button bsStyle="primary" onClick={this.handleUploadClick}>Upload</Button></div> */}
                         <div className="upload_mesh upload_progress">
                         { this.state.showUploadProgress && uploadedFilePercent < 100 &&
                           <ProgressBar now={uploadedFilePercent} label={`Uploaded ${uploadedFilePercent}%`} />
@@ -358,7 +350,7 @@ class MeshContainer extends React.Component {
                             }
                           </div>
                         }
-                        <Table striped bordered condensed hover>
+                        <Table striped bordered condensed={'true'} hover>
                           <thead>
                           <tr>
                             <th style={checkboxCol}><Form.Check type="checkbox" id="formCheckboxAll" onChange={this.meshSelectAll} checked={this.state.isMeshAllChecked} /></th>
@@ -370,16 +362,15 @@ class MeshContainer extends React.Component {
                           </tr>
                           </thead>
                           <tbody>
-                            <Confirm title="Confirm" description="Are you sure? Deletion is not reversible.">
+                            <Confirm key={"delete mesh confirm"} title="Confirm" description="Are you sure? Deletion is not reversible.">
                             {confirm =>
                               (meshList && meshList.map(
                                       (mesh, index) => (
                                           [
                                           <tr key={mesh.meshId} className={(mesh.meshId == this.state.selectedMeshId) ? 'table_row_grey table-content-row' : 'table-content-row'}>
-                                              <td className="text-center"><Form.Check type="checkbox" id={mesh.meshId} checked={this.state.meshChecked[index] !== undefined && this.state.meshChecked[index].checked ? true : false} onClick={() => this.handleOptionChangeMesh(index)} value={mesh.meshId} /></td>
+                                              <td className="text-center"><Form.Check type="checkbox" id={mesh.meshId} defaultChecked={this.state.meshChecked[index] !== undefined && this.state.meshChecked[index].checked ? true : false} onClick={() => this.handleOptionChangeMesh(index)} value={mesh.meshId} /></td>
                                               <td onClick={() => this.getMeshDetail(mesh.meshId)} style={meshNameCellStyle}>
-                                                  <a href="javascript:void(0)" onClick={() => this.getMeshDetail(mesh.meshId)}>
-                                                      {/* <div><TextTruncate text={mesh.meshName} title={mesh.meshName}/></div> */}
+                                                  <a onClick={() => this.getMeshDetail(mesh.meshId)}>
                                                       <div>{mesh.meshName}</div>
                                               </a></td>
                                               <td>{mesh.meshId}</td>
@@ -440,7 +431,7 @@ class MeshContainer extends React.Component {
                                                                       {name: 'Log', value: "info/meshproc.out"}
                                                                       , {
                                                                       name: 'Mesh File',
-                                                                      value: getMeshName(mesh.meshFormat, mesh.meshEndianness, mesh.meshCompression)
+                                                                      value: getMeshName(mesh.meshFormat, mesh.meshEndianness, mesh.meshCompression, mesh.meshName)
                                                                   }
                                                                   ].map((item, index) => {
                                                                       return <DropdownItem key={index}
@@ -567,7 +558,7 @@ class MeshContainer extends React.Component {
                             <Modal.Title>Upload Mesh File</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form horizontal>
+                            <div>
                                 <input accept=".ugrid,.gz,.bz2,.cgns" type="file"  placeholder="choose mesh file to upload"
                                        ref={this.fileRef} required="required" onChange={this.onMeshFileSelected} />
                                 <p style={{fontSize: '0.8em'}}>Supported file: .ugrid, .gz, .bz2, .cgns</p>
@@ -580,6 +571,7 @@ class MeshContainer extends React.Component {
                                 <br />
                                 <FormKendo
                                   ref = {this.flow360mesh}
+
                                   render={() => (
                                   <FormElementKendo>
                                     <FieldKendo
@@ -593,47 +585,40 @@ class MeshContainer extends React.Component {
                                       validator={jsonValidator}
                                     />
                                   </FormElementKendo>)} /><br />
-                                { this.state.isFormatEndianness && <FormGroup >
-                                    <Col sm={10}>
-                                        <FormLabel>Format & Endianness</FormLabel>
-                                    </Col>
-
-                                    <Col sm={10} className={this.state.showEndiannessError ? "border border-danger" : ""}>
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                              { this.state.endiannessDisable ? 
-                                                <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
-                                                                  checked={this.checkMeshOptionType("little", "aflr3")}
-                                                                  onChange={this.handleOptionChange} disabled/> :
-                                                <InputGroup.Radio type="radio" name="radioGroup" className="margin10" inline value={"little"}
-                                                                  checked={this.checkMeshOptionType("little", "aflr3")}
-                                                                  onChange={this.handleOptionChange}/>
-                                              }
-                                            </InputGroup.Prepend>
-                                            <InputGroup.Text>Little endian aflr3</InputGroup.Text>
-                                            <p className="text-danger m-3">For lb8.ugrid</p>
+                                { this.state.isFormatEndianness && <FormGroup style={{position: "relative"}}>
+                                    <FormLabel className={this.state.showEndiannessError ? "text-danger" : ""} style={{position: "absolute", top: "-12px", left: "10px", background: "white", zIndex: 100, padding: "0 10px", fontSize: "15px"}}>Format & Endianness</FormLabel>
+                                    <Col sm={12} className={this.state.showEndiannessError ? "border border-danger p-3" : "border p-3"}>
+                                        <InputGroup className="d-flex align-items-end">
+                                            { this.state.endiannessDisable ? 
+                                              <input type="radio" className="m-2" name="radioGroup" value={"little"} id="littleEndianAflr3"
+                                                                checked={this.checkMeshOptionType("little", "aflr3")}
+                                                                onChange={this.handleOptionChange} disabled/> :
+                                              <input type="radio" className="m-2" name="radioGroup" value={"little"} id="littleEndianAflr3"
+                                                                checked={this.checkMeshOptionType("little", "aflr3")}
+                                                                onChange={this.handleOptionChange}/>
+                                            }
+                                            <label type="littleEndianAflr3" style={{fontSize: "18px", margin: "1px 4px"}}>Little endian aflr3</label>
+                                            <p className="text-danger m-0 ml-3">For lb8.ugrid</p>
                                         </InputGroup>
 
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                              { this.state.endiannessDisable ? 
-                                                <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
-                                                                  checked={this.checkMeshOptionType("big", "aflr3")}
-                                                                  onChange={this.handleOptionChange} disabled/> :
-                                                <InputGroup.Radio name="radioGroup" className="margin10" inline value={"big"}
-                                                                  checked={this.checkMeshOptionType("big", "aflr3")}
-                                                                  onChange={this.handleOptionChange}/>
-                                              }
-                                            </InputGroup.Prepend>
-                                            <InputGroup.Text>Big endian aflr3</InputGroup.Text>
-                                            <p className="text-danger m-3">For b8.ugrid</p>
+                                        <InputGroup className="d-flex align-items-end">
+                                            { this.state.endiannessDisable ? 
+                                              <input type="radio" className="m-2" name="radioGroup" value={"big"} id="bigEndianAflr3"
+                                                                checked={this.checkMeshOptionType("big", "aflr3")}
+                                                                onChange={this.handleOptionChange} disabled/> :
+                                              <input type="radio" className="m-2" name="radioGroup" value={"big"} id="bigEndianAflr3"
+                                                                checked={this.checkMeshOptionType("big", "aflr3")}
+                                                                onChange={this.handleOptionChange}/>
+                                            }
+                                            <label for="bigEndianAflr3" style={{fontSize: "18px", margin: "1px 4px"}}>Big endian aflr3</label>
+                                            <p className="text-danger m-0 ml-3">For b8.ugrid</p>
                                         </InputGroup>
 
                                     </Col>
 
                                 </FormGroup> }
 
-                            </Form>
+                            </div>
                             <a target='_blank' href='https://github.com/flexcompute/Flow360PythonClient#version-history'>Release history</a>
                             {versions &&
                             <CreatableSelect
@@ -645,12 +630,8 @@ class MeshContainer extends React.Component {
                             />}
                         </Modal.Body>
                         <Modal.Footer style={{position: "relative"}}>
-                        {this.state.showEndiannessError &&
-                          <p className="m-0 text-danger" style={{position: "absolute", top: "10px", left: "25px", fontSize: "16px"}}><span className="font-weight-bold">Format & Endianness</span> required!</p>
-                        }
-                            <Button bsStyle="primary"
-                                    onClick={this.handleNewMeshSubmit}>Submit</Button>
-                            <Button onClick={this.handleNewMeshClose}>Close</Button>
+                            <Button variant="secondary" onClick={this.handleNewMeshClose}>Close</Button>
+                            <Button variant="primary" onClick={this.handleNewMeshSubmit}>Submit</Button>
                         </Modal.Footer>
                     </Modal>
                 </Card.Body>
@@ -671,7 +652,8 @@ class MeshContainer extends React.Component {
         this.setState({
             newMeshEndianType: changeEvent.target.value,
             newMeshFormat: "aflr3",
-            endiannessSelected: true
+            endiannessSelected: true,
+            showEndiannessError: false
         });
     };
 
@@ -758,7 +740,7 @@ class MeshContainer extends React.Component {
       const allowedExtensions = ['ugrid', 'gz', 'bz2', 'cgns'];
       let fileNameArray = file.name.split('.');
       let fileExtension = fileNameArray.pop();
-      if(fileExtension === "gz") fileExtension = fileNameArray.pop();
+      if(["gz", "bz2"].includes(fileExtension)) fileExtension = fileNameArray.pop();
       const specificFileName = fileNameArray.join(".");
       const extensionExist = !!allowedExtensions.find(ext => ext === fileExtension);
       if (extensionExist && fileExtension === "ugrid") {

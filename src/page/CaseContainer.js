@@ -8,6 +8,7 @@ import {
     Button,
     Popover,
     Dropdown,
+    DropdownItem,
     DropdownButton,
     OverlayTrigger,
     Tooltip,
@@ -41,8 +42,7 @@ import {visualizeFlow360Case} from "../component/visualizeCase-21.1.1";
 import { Form as FormKendo, Field as FieldKendo, FormElement as FormElementKendo} from '@progress/kendo-react-form';
 import { FormJSONTextArea, jsonValidator } from "../component/kendo-form-component";
 import ConvertDateToLocal from '../util/DateUtils';
-
-const DropdownItem = Dropdown.item;
+import Humanize from "humanize-plus";
 
 const trStyle = {
     backgroundColor: 'transparent'
@@ -254,6 +254,7 @@ class CaseContainer extends React.Component {
                                 <th>Start Time</th>
                                 <th>Finish Time</th>
                                 <th>Status</th>
+                                <th>Work</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -273,6 +274,7 @@ class CaseContainer extends React.Component {
                                             <td onClick={() => this.getAllCaseDetail(caseItem.caseId)}><ConvertDateToLocal utcDate={caseItem.caseStartTime}/></td>
                                             <td onClick={() => this.getAllCaseDetail(caseItem.caseId)}><ConvertDateToLocal utcDate={caseItem.caseFinishTime}/></td>
                                             <td onClick={() => this.getAllCaseDetail(caseItem.caseId)}>{caseItem.caseStatus}</td>
+                                            <td>{"completed" === caseItem.caseStatus ? Humanize.formatNumber(caseItem.computeCost,2) : ""}</td>
                                             <td>
                                               {(hasOwnership || s3User.admin) && <OverlayTrigger
                                                 key={`tooltip-forkCase-${caseItem.caseId}`}

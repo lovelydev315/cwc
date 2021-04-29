@@ -11,22 +11,22 @@ export function getFileCompression(name) {
 }
 
 
-export function getMeshName(format, endianness, compressType) {
-  let meshName = "";
+export function getMeshName(format, endianness, compressType, name) {
+  let meshName;
   if ("aflr3" === format && endianness === "little") {
     meshName = "mesh.lb8.ugrid";
   } else if ("aflr3" === format && endianness === "big") {
     meshName = "mesh.b8.ugrid";
   } else {
-    meshName = compressType;
+    meshName = name;
   }
   if(compressType) {
     if (compressType.endsWith("gz")) {
-      meshName = meshName + "gz";
+      meshName = meshName + ".gz";
     } else if (compressType.endsWith("bz2")) {
-      meshName = meshName + "bz2";
+      meshName = meshName + ".bz2";
     }
   }
-
+  // console.log(`format:${format}, endianness: ${endianness}, compressType:${compressType}, meshName:${meshName}`);
   return meshName;
 }

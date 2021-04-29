@@ -9,23 +9,17 @@ import {ControlRoute} from "../container/PrivateRoute";
 import {actionCreators as authReducer} from "../reducer/AuthReducer";
 import {actionCreators as caseReducer} from "../reducer/CaseReducer";
 import {actionCreators as meshReducer} from "../reducer/MeshReducer";
-import {DropdownButton, Dropdown, Nav, Navbar} from "react-bootstrap";
+import {DropdownButton, DropdownItem, Nav, Navbar} from "react-bootstrap";
 import MeshFactoryContainer from "./StudioContainer";
 import logoDark from '../style/assets/images/logo.svg';
 import autoBind from "react-autobind";
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux";
 
-const DropdownItem = Dropdown.item;
-
 class WorkspacePage extends React.Component {
     constructor(props, context) {
         super(props, context);
         autoBind(this);
-        const s3User = getS3User();
-        this.state = {
-            accessUser:s3User
-        };
     }
     componentDidMount() {
 
@@ -36,6 +30,7 @@ class WorkspacePage extends React.Component {
         if(s3User.guestUserIdentity != e.identity) {
             s3User.guestUserIdentity = e.identity;
             s3User.guestUserId = e.userId;
+            s3User.guestEmail = e.email;
             localStorage.setItem(AUTH_HEADER, JSON.stringify(s3User));
             this.setState({accessUser:e})
             this.props.listCases('all');
@@ -48,26 +43,22 @@ class WorkspacePage extends React.Component {
         const s3User = getS3User();
 
         let {guestUsers} = s3User;
-        const {accessUser} = this.state;
-        //console.log(accessUser);
         if(!guestUsers) {
             guestUsers = [];
         }
+        const defaultSelectedEmail = s3User.guestEmail ?? s3User.email;
         const hasOwnership = !s3User.guestUserIdentity || s3User.guestUserIdentity == s3User.identityId;
 
         guestUsers.push({identity:s3User.identityId, email: s3User.email, userId:s3User.userId});
         if(s3User && s3User.userId) {
-
-
             return (
               <div>
                   <Navbar bg="light" expand="lg">
-                      <a href='https://www.flexcompute.com/'> <img src={logoDark} alt=''
-                                                                   className='logo img-fluid mt-4 mb-4 ml-2 mr-2'/>
+                      <a href='https://www.flexcompute.com/'>
+                          <img src={logoDark} alt='' className='logo img-fluid mt-4 mb-4 ml-2 mr-2'/>
                       </a>
                       <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                       <div className="collapse navbar-collapse" id="navbarText">
-
                           <Nav className="mr-auto">
                               <Nav.Link>
                                   <NavLink
@@ -95,7 +86,7 @@ class WorkspacePage extends React.Component {
                               </Nav.Link>
 
                           </Nav>
-                          <DropdownButton id="guest_user_list" title={accessUser.email}
+                          <DropdownButton id="guest_user_list" title={defaultSelectedEmail}
                                           onSelect={(e) => this.onAccountSelect(guestUsers[e])}>
                               {guestUsers.map((key, index) => (
                                 <DropdownItem key={index} eventKey={index}>{guestUsers[index].email}</DropdownItem>
